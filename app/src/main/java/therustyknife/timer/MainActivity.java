@@ -15,18 +15,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<Timer> timers;
-
     private ListView timerList;
 
 
@@ -37,35 +38,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Util.context = getApplicationContext();
+
+        Timer.loadList(getApplicationContext());
+
+        //TODO: remove test values
+        Timer t = new Timer("Test Timer");
+        t.addStage(new TimerStage("First Stage", 45, 12));
+        t.addStage(new TimerStage("Second Stage", 6, 14, 10));
+        Timer.getList().add(t);
+
         // The add button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*AlertDialog alert = new AlertDialog.Builder(getApplicationContext()).create();
-                alert.setTitle(getString(R.string.ask_timer_name_title));
-
-                // Textfield for name
-                final EditText input = new EditText(getApplicationContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setHint(R.string.name_hint);
-                alert.setView(input);
-
-                alert.setButton(AlertDialog.BUTTON_POSITIVE, getText(R.string.ask_timer_name_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO: create a new Timer
-                    }
-                });
-
-                alert.setButton(AlertDialog.BUTTON_NEGATIVE, getText(R.string.ask_timer_name_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                alert.show();*/
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle(getString(R.string.ask_timer_name_title));
 
@@ -82,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = text.getText().toString();
+                        if (name.equals("")) name = getText(R.string.default_timer_name).toString();
                         Timer t = new Timer(name);
-                        timers.add(t);
+                        Timer.getList().add(t);
+                        notifyDataChanged();
                         switchTo(t);
                     }
                 });
@@ -98,21 +87,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        timers = new ArrayList<Timer>();
-        //TODO: remove test values
-        timers.add(new Timer("Timer 1"));
-        timers.add(new Timer("Timer 2"));
-
-        Timer t = new Timer("Timer 3");
-        t.addStage(new TimerStage("Stage 1", 65, 10));
-        t.addStage(new TimerStage("Stage 2", 20, 2, 13));
-
-        timers.add(t);
-
-        for(int i = 3; i <= 10; i++) timers.add(new Timer("Timer " + i));
-
         timerList = (ListView) findViewById(R.id.timer_list);
-        timerList.setAdapter(new TimerAdapter(getApplicationContext(), timers));
+        timerList.setAdapter(new TimerAdapter(getApplicationContext(), Timer.getList()));
+        timerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switchTo((Timer)timerList.getAdapter().getItem(i));
+            }
+        });
     }
 
     @Override
@@ -137,9 +119,26 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        Timer.saveList(getApplicationContext());
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        notifyDataChanged();
+    }
+
     public void switchTo(Timer t){
         Intent intent = new Intent(this, TimerActivity.class);
         Util.getDataHolder().setData(t);
         startActivity(intent);
+    }
+
+    public void notifyDataChanged(){
+        ((TimerAdapter)timerList.getAdapter()).notifyDataSetChanged();
     }
 }
