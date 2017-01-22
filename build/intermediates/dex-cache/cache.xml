@@ -43,7 +43,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="26358bd3e63cce306e958b3e78a8ed41c4a718e0">
+        sha1="06952501597d4eb8a5a5bea4ad003c79e92aa5b1">
         <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_e8e2c38619fece3dc58b482122cf45b6fedff446\classes.dex" />
     </item>
     <item
@@ -115,7 +115,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="80df0183850ea3b2007a251cbc69a93ec4a6ce36">
+        sha1="714196525a29bbcc4f8e5f256a8f5506c2f948bf">
         <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_1e73bcfdc81e3c782c9fe6bd494022b5fd78d595\classes.dex" />
     </item>
     <item

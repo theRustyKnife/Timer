@@ -18,9 +18,22 @@
     <string name="ask_timer_name_cancel">CANCEL</string>
     <string name="name_hint">Name</string>
     <string name="default_timer_name">New Timer</string>
+
     <string name="title_activity_stage">StageActivity</string>
 
+    <string name="stage_n">"Stage #"</string>
     <string name="pause_before">"Pause before: "</string>
     <string name="duration">"Duration: "</string>
     <string name="pause_after">"Pause after: "</string>
+
+    <string name="ask_stage_name_title">Add new stage</string>
+    <string name="ask_stage_name_description">"Name: "</string>
+    <string name="ask_stage_name_ok">ADD</string>
+    <string name="ask_stage_name_cancel">CANCEL</string>
+    <string name="default_stage_name">New Stage</string>
+
+    <string name="stage_delete">DELETE</string>
+    <string name="delete_title">Are you sure?</string>
+    <string name="yes">YES</string>
+    <string name="cancel">CANCEL</string>
 </resources>

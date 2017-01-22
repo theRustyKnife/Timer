@@ -42,12 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         Timer.loadList(getApplicationContext());
 
-        //TODO: remove test values
-        Timer t = new Timer("Test Timer");
-        t.addStage(new TimerStage("First Stage", 45, 12));
-        t.addStage(new TimerStage("Second Stage", 6, 14, 10));
-        Timer.getList().add(t);
-
         // The add button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

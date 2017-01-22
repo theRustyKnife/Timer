@@ -1,13 +1,18 @@
 package therustyknife.timer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -43,14 +48,40 @@ public class StageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: implement adding new stages
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(StageActivity.this).create();
+                alertDialog.setTitle(getString(R.string.ask_stage_name_title));
+
+                // Textfield for name
+                final View v = getLayoutInflater().inflate(R.layout.text_query_layout, null);
+                TextView label = (TextView) v.findViewById(R.id.text_query_label);
+                final EditText text = (EditText) v.findViewById(R.id.text_query_text);
+                label.setText(getText(R.string.ask_stage_name_description));
+                text.setHint(getText(R.string.default_stage_name));
+
+                alertDialog.setView(v);
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getText(R.string.ask_stage_name_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = text.getText().toString();
+                        if (name.equals("")) name = getText(R.string.default_stage_name).toString();
+                        TimerStage t = new TimerStage(name);
+                        stages.add(t);
+                        ((TimerStageAdapter)stageList.getAdapter()).notifyDataSetChanged();
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getText(R.string.ask_timer_name_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                alertDialog.show();
             }
         });
 
         stageList = (ListView) findViewById(R.id.stage_list);
         stageList.setAdapter(new TimerStageAdapter(getApplicationContext(), stages));
     }
-
 }

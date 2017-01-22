@@ -17,6 +17,7 @@
             android:padding="10dp"
             android:orientation="horizontal">
 
+            <!--TODO: possibly change this layout to something else to better arrange the button-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/stage_list_item_delete"/>
+                    android:id="@+id/stage_list_item_delete"
+                    android:text="@string/stage_delete"/>
                     <!--TODO: implement deletion-->
             </LinearLayout>
             <LinearLayout
@@ -62,7 +64,8 @@
                     <EditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_pause_before"/>
+                        android:id="@+id/stage_list_item_pause_before"
+                        android:inputType="time"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -78,7 +81,8 @@
                     <EditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_duration"/>
+                        android:id="@+id/stage_list_item_duration"
+                        android:inputType="time"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -94,7 +98,8 @@
                     <EditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_pause_after"/>
+                        android:id="@+id/stage_list_item_pause_after"
+                        android:inputType="time"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
