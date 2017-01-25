@@ -12,15 +12,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\DATA\development\git_repos\Timer\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\25.0.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="1108575c7dc7b7f5b378b3290ac90de81a9b8830">
-        <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-cardview-v7-25.0.1_64dd5392a38b053582d0caf058480bc6ab6084df\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\DATA\development\git_repos\Timer\app\build\intermediates\exploded-aar\com.android.support\design\25.1.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -43,7 +34,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="06952501597d4eb8a5a5bea4ad003c79e92aa5b1">
+        sha1="39539f3433355a02c70032c5fbf80312b71aca63">
         <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_e8e2c38619fece3dc58b482122cf45b6fedff446\classes.dex" />
     </item>
     <item
@@ -115,7 +106,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="714196525a29bbcc4f8e5f256a8f5506c2f948bf">
+        sha1="a7673cda35b437d0e00fba02402c43ca8af569d5">
         <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_1e73bcfdc81e3c782c9fe6bd494022b5fd78d595\classes.dex" />
     </item>
     <item
@@ -135,6 +126,15 @@
         revision="25.0.2"
         sha1="d38084015027549951cbaea5d5f6fb795cc81151">
         <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-transition-25.1.0_179fcf4704709eaf593d61633fb1a2fdeba2b699\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\DATA\development\git_repos\Timer\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\25.1.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7f2420506110902f033406b25697cf97ee8c38b2">
+        <dex dex="C:\DATA\development\git_repos\Timer\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-cardview-v7-25.1.0_d4e65bf7c90ee20eb5f36cf23557283f603b6eca\classes.dex" />
     </item>
     <item
         is-multidex="true"

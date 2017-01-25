@@ -36,4 +36,16 @@
     <string name="delete_title">Are you sure?</string>
     <string name="yes">YES</string>
     <string name="cancel">CANCEL</string>
+
+    <string name="next">"Next: "</string>
+
+    <string name="add_stage_hint">Add some stages first!</string>
+    <string name="start">"Start"</string>
+    <string name="pause">Pause</string>
+
+    <string name="remaining">"Remaining: "</string>
+
+    <string name="failed_start">Can\'t start this timer. Make sure there are some stages with duration longer than 0.</string>
+
+    <string name="exit_timer_title">Are you sure you want to exit?</string>
 </resources>

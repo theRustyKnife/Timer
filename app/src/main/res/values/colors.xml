@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="text_color">#000</color>
+
+    <string name="button_alpha">"0.65"</string>
 </resources>

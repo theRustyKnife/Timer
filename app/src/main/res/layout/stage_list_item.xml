@@ -21,19 +21,22 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="left">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/stage_list_item_number"
-                    android:textSize="23sp"/>
+                    android:textSize="23sp"
+                    android:layout_gravity="top"/>
 
                 <EditText
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/stage_list_item_name"
-                    android:textSize="23dp"
+                    android:textSize="16dp"
+                    android:layout_gravity="top"
                     android:inputType="text"
                     android:maxLines="1"/>
 
@@ -41,8 +44,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/stage_list_item_delete"
-                    android:text="@string/stage_delete"/>
-                    <!--TODO: implement deletion-->
+                    android:text="@string/stage_delete"
+                    android:textSize="13sp"
+                    android:minHeight="40dp"
+                    android:minWidth="10dp"
+                    android:layout_gravity="bottom"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -59,13 +65,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="12sp"
                         android:text="@string/pause_before"/>
 
                     <EditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/stage_list_item_pause_before"
-                        android:inputType="time"/>
+                        android:inputType="number"
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -76,30 +84,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/duration"/>
+                        android:text="@string/duration"
+                        android:textSize="12sp"/>
 
                     <EditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/stage_list_item_duration"
-                        android:inputType="time"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pause_after"/>
-
-                    <EditText
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_pause_after"
-                        android:inputType="time"/>
+                        android:inputType="number"
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:id="@+id/stage_list"
         android:dividerHeight="0dp"
-        android:divider="@null">
+        android:divider="@null"
+        android:descendantFocusability="beforeDescendants">
     </ListView>
 </RelativeLayout>

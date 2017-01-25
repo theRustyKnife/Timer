@@ -1,9 +1,12 @@
 package therustyknife.timer;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -18,6 +21,10 @@ public class Util {
     public static final String EXTRA_TIMER_KEY = "therustyknife.timer.extra_timer";
     public static final String TIMER_SAVE_PATH = "/timers/";
 
+    public static final long MILLIS_IN_SECOND = 1000;
+
+    public static final String TAG = "therustyknife.timer";
+
     public static Context context;
 
     public static final String formatTime(int seconds){
@@ -26,6 +33,7 @@ public class Util {
 
         return String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
     }
+    public static final String formatTime(long milis){ return formatTime((int)(milis / MILLIS_IN_SECOND)); }
 
     public static String makePath(String path){ return context.getFilesDir() + path; }
 
@@ -35,6 +43,16 @@ public class Util {
             return true;
         }
         return false;
+    }
+
+    public static void showConfirmBox(Activity a, String title, String positiveText, String negativeText, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
+        AlertDialog alertDialog = new AlertDialog.Builder(a).create();
+        alertDialog.setTitle(title);
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, positiveText, positiveListener);
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, negativeText, negativeListener);
+
+        alertDialog.show();
     }
 
     public static void writeData(String path, byte[] data){
@@ -49,7 +67,7 @@ public class Util {
             stream.write(data);
             stream.close();
         }catch(IOException e){
-            Log.d("tagofallthetags", "failed write to " + file.getPath(), e);
+            Log.d(Util.TAG, "failed write to " + file.getPath(), e);
         }
     }
 
@@ -72,7 +90,7 @@ public class Util {
 
             return data;
         }catch (IOException e){
-            Log.d("tagofallthetags", "failed to read from " + file.getPath(), e);
+            Log.d(Util.TAG, "failed to read from " + file.getPath(), e);
             return new byte[0];
         }
     }

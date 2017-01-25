@@ -3,7 +3,9 @@ package therustyknife.timer;
 
 import android.content.Context;
 import android.graphics.Path;
+import android.os.Handler;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,21 +24,17 @@ import java.util.Comparator;
 
 
 public class Timer implements Serializable{
-    private static final TimerComparator comparator = new TimerComparator();
-
     private static ArrayList<Timer> list = new ArrayList<Timer>();
 
+
+    private transient TimerState state;
 
     private String displayName;
     private String name;
     private ArrayList<TimerStage> stages;
 
 
-    public static ArrayList<Timer> getList(){ return list; }
-
-    public static final void sortList(){ Collections.sort(list, comparator); }
-
-
+    //make a unique, identifying name to use as filename
     public static String makeNameUnique(String name, int n){
         String suf = "";
         if (n >= 0) suf += n;
@@ -50,21 +48,13 @@ public class Timer implements Serializable{
     public static String makeNameUnique(String name){ return makeNameUnique(name, -1); }
 
 
-    public Timer(String name, ArrayList<TimerStage> stages){
-        this.displayName = name;
-        this.stages = stages;
-        this.name = makeNameUnique(name);
-    }
-    public Timer(String name){ this(name, new ArrayList<TimerStage>()); }
-
-
     public static void saveList(Context context){
         for (Timer t : list) t.save(context);
     }
 
     public static void loadList(Context context){
         File dir = new File(Util.makePath(Util.TIMER_SAVE_PATH));
-        Log.d("tagofallthetags", "attempting to load timers from " + dir.getPath());
+        Log.d(Util.TAG, "attempting to load timers from " + dir.getPath());
         if (!dir.exists() || dir.isFile()){
             dir.mkdirs();
         }
@@ -72,7 +62,10 @@ public class Timer implements Serializable{
         list = new ArrayList<Timer>();
 
         String[] files = dir.list();
-        if (files == null) return;
+        if (files == null){
+            Log.d(Util.TAG, "no timers found");
+            return;
+        }
 
         for (String fname : files){
             File file = new File(Util.makePath(Util.TIMER_SAVE_PATH + fname));
@@ -80,10 +73,27 @@ public class Timer implements Serializable{
                 list.add(load(context, fname));
             }
         }
+
+        Log.d(Util.TAG, "found " + list.size() + " timers");
     }
 
 
-    public void addStage(TimerStage stage){ stages.add(stage); }
+    public static ArrayList<Timer> getList(){ return list; }
+
+
+    public Timer(String name, ArrayList<TimerStage> stages){
+        this.displayName = name;
+        this.stages = stages;
+        this.name = makeNameUnique(name);
+
+        initState();
+    }
+    public Timer(String name){ this(name, new ArrayList<TimerStage>()); }
+
+    public void initState(){
+        state = new TimerState(this);
+    }
+
 
     public void save(Context context){
         File file = new File(Util.makePath(Util.TIMER_SAVE_PATH + name));
@@ -100,7 +110,7 @@ public class Timer implements Serializable{
             Util.writeData(file.getPath(), bos.toByteArray());
             bos.close();
         }catch (IOException e){
-            Log.d("tagofallthetags", "failed save to " + file.getPath(), e);
+            Log.d(Util.TAG, "failed save to " + file.getPath(), e);
         }
     }
 
@@ -112,9 +122,10 @@ public class Timer implements Serializable{
             Timer res = (Timer) is.readObject();
             is.close();
             bis.close();
+            res.initState();
             return res;
         }catch(IOException | ClassNotFoundException e){
-            Log.d("tagofallthetags", "failed load from " + file.getPath(), e);
+            Log.d(Util.TAG, "failed load from " + file.getPath(), e);
             return null;
         }
     }
@@ -126,7 +137,15 @@ public class Timer implements Serializable{
         }
     }
 
+
+    public void addStage(TimerStage stage){ stages.add(stage); }
+
+
     public ArrayList<TimerStage> getStages(){ return stages; }
+    public TimerStage getStage(int index){
+        if (index >= 0 && index < stages.size()) return stages.get(index);
+        return null;
+    }
 
     public String getName(){ return displayName; }
 
@@ -137,12 +156,6 @@ public class Timer implements Serializable{
         for (TimerStage stage : stages) res += stage.getTotalLength();
         return res;
     }
-}
 
-
-class TimerComparator implements Comparator<Timer>{
-    @Override
-    public int compare(Timer timer, Timer t1) {
-        return timer.getName().compareTo(t1.getName());
-    }
+    public TimerState getState(){ return state; }
 }

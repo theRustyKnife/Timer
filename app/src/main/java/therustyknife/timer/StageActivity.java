@@ -18,6 +18,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class StageActivity extends AppCompatActivity {
+    private static StageActivity current;
+    public static StageActivity getCurrent(){ return current; }
+
+
     private ListView stageList;
 
     private Timer timer;
@@ -30,6 +34,8 @@ public class StageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        current = this;
 
         Object t_data = Util.getDataHolder().getData();
         if (t_data == null || !(t_data instanceof Timer)){
@@ -66,7 +72,7 @@ public class StageActivity extends AppCompatActivity {
                         String name = text.getText().toString();
                         if (name.equals("")) name = getText(R.string.default_stage_name).toString();
                         TimerStage t = new TimerStage(name);
-                        stages.add(t);
+                        timer.addStage(t);
                         ((TimerStageAdapter)stageList.getAdapter()).notifyDataSetChanged();
                     }
                 });
@@ -83,5 +89,11 @@ public class StageActivity extends AppCompatActivity {
 
         stageList = (ListView) findViewById(R.id.stage_list);
         stageList.setAdapter(new TimerStageAdapter(getApplicationContext(), stages));
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        timer.save(getApplicationContext());
     }
 }
