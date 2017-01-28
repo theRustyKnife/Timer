@@ -3,6 +3,7 @@ package therustyknife.timer;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,20 +17,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
+import com.ikovac.timepickerwithseconds.TimePicker;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private ListView timerList;
+
+    private SharedPreferences prefs;
 
 
     @Override
@@ -38,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        prefs = getSharedPreferences(Util.PREFS_KEY, 0);
+        Util.timeFormatIndex = prefs.getInt(Util.TIME_FORMAT_PREF_KEY, 0);
 
         Util.context = getApplicationContext();
 
@@ -80,12 +92,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
                 alertDialog.show();
             }
         });
 
         timerList = (ListView) findViewById(R.id.timer_list);
-        timerList.setAdapter(new TimerAdapter(getApplicationContext(), Timer.getList()));
+        timerList.setAdapter(new TimerAdapter(this, Timer.getList()));
         timerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -110,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

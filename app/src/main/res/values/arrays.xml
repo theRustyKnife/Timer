@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="format_names">
+        <item>01:28</item>
+        <item>1m 28s</item>
+    </array>
+</resources>

@@ -16,8 +16,8 @@ public class TimerStage implements Serializable {
         this.time = time;
         this.pauseBefore = pauseBefore;
     }
-    public TimerStage(String name, int time){ this(name, time, 0); }
-    public TimerStage(String name){ this(name, 0, 0); }
+    public TimerStage(String name, int time){ this(name, time, 10); }
+    public TimerStage(String name){ this(name, 30, 10); }
 
 
     public String getName(){ return name; }

@@ -27,11 +27,15 @@ public class Timer implements Serializable{
     private static ArrayList<Timer> list = new ArrayList<Timer>();
 
 
+    private TimerStats stats;
+
     private transient TimerState state;
 
     private String displayName;
     private String name;
     private ArrayList<TimerStage> stages;
+
+    private int color = Util.context.getResources().getColor(R.color.colorPrimary);
 
 
     //make a unique, identifying name to use as filename
@@ -82,6 +86,8 @@ public class Timer implements Serializable{
 
 
     public Timer(String name, ArrayList<TimerStage> stages){
+        stats = new TimerStats(this);
+
         this.displayName = name;
         this.stages = stages;
         this.name = makeNameUnique(name);
@@ -157,5 +163,16 @@ public class Timer implements Serializable{
         return res;
     }
 
+    public int getLengthWithoutPauses(){
+        int res = 0;
+        for (TimerStage stage : stages) res += stage.getTime();
+        return res;
+    }
+
+    public int getColor(){ return color; }
+    public void setColor(int color){ this.color = color; }
+
     public TimerState getState(){ return state; }
+
+    public TimerStats getStats(){ return stats; }
 }

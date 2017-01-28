@@ -9,11 +9,31 @@
     tools:context="therustyknife.timer.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <ListView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/timer_list"
-        android:dividerHeight="0dp"
-        android:divider="@null">
-    </ListView>
+        android:id="@+id/timer_scroll_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="yO IMMA FUKEN TEKST"/>
+
+            <therustyknife.timer.Views.NestedListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/timer_list"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                android:focusable="false">
+            </therustyknife.timer.Views.NestedListView>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

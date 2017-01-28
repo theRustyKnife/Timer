@@ -18,8 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
+import com.ikovac.timepickerwithseconds.TimePicker;
+
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
@@ -35,7 +39,8 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final TimerStage stage = getItem(position);
 
-        if (convertView == null) convertView = LayoutInflater.from(getContext()).inflate(R.layout.stage_list_item, parent, false);
+        // always create new view to prevent data loss or duplication and other problems like that
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.stage_list_item, parent, false);
 
         // delete button
         Button delete = (Button) convertView.findViewById(R.id.stage_list_item_delete);
@@ -70,7 +75,6 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
 
         // name
         EditText name = (EditText) convertView.findViewById(R.id.stage_list_item_name);
-        name.setText(stage.getName());
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -81,29 +85,44 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
                 stage.setName(editable.toString());
             }
         });
+        name.setText(stage.getName());
+
 
         // all the times //TODO: change this to some other view type
-        EditText pauseBefore = (EditText) convertView.findViewById(R.id.stage_list_item_pause_before);
-        pauseBefore.setText(stage.getPauseBefore() + "");
-        pauseBefore.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        final TextView pauseBefore = (TextView) convertView.findViewById(R.id.stage_list_item_pause_before);
+        pauseBefore.setText(Util.formatTime(stage.getPauseBefore()));
+        pauseBefore.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void afterTextChanged(Editable editable) {
-                String t = editable.toString();
-                if (!t.equals("")) stage.setPauseBefore(Integer.valueOf(t));
+            public void onClick(View view) {
+                int t = stage.getPauseBefore();
+
+                MyTimePickerDialog mTimePicker = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                        stage.setPauseBefore(hourOfDay * 60 * 60 + minute * 60 + seconds);
+                        pauseBefore.setText(Util.formatTime(stage.getPauseBefore()));
+                    }
+                }, Util.getHrs(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
+                mTimePicker.show();
             }
         });
 
-        EditText duration = (EditText) convertView.findViewById(R.id.stage_list_item_duration);
-        duration.setText(stage.getTime() + "");
-        duration.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        final TextView duration = (TextView) convertView.findViewById(R.id.stage_list_item_duration);
+        duration.setText(Util.formatTime(stage.getTime()));
+        duration.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void afterTextChanged(Editable editable) {
-                String t = editable.toString();
-                if (!t.equals("")) stage.setTime(Integer.valueOf(t));
+            public void onClick(View view) {
+                int t = stage.getTime();
+                MyTimePickerDialog mTimePicker = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                        stage.setTime(hourOfDay * 60 * 60 + minute * 60 + seconds);
+                        duration.setText(Util.formatTime(stage.getTime()));
+                    }
+                }, Util.getHrs(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
+                mTimePicker.show();
             }
         });
 

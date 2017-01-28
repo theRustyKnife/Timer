@@ -12,4 +12,9 @@
         android:orderInCategory="90"
         android:title="@string/action_edit_stages"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_change_color"
+        android:orderInCategory="95"
+        android:title="@string/change_color"
+        app:showAsAction="never" />
 </menu>

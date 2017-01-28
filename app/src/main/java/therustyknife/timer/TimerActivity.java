@@ -2,25 +2,25 @@ package therustyknife.timer;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pes.androidmaterialcolorpickerdialog.OnColorSelected;
 
 import java.util.ArrayList;
 
@@ -30,18 +30,20 @@ public class TimerActivity extends AppCompatActivity{
 
     private TextView statusDisplay;
 
-    private FrameLayout nextFrame;
+    private LinearLayout nextFrame;
     private TextView nextName;
     private TextView nextTime;
 
     private FrameLayout content;
     private TimerFragment contentFragment;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // get the passed in timer, return if none was passed
@@ -58,17 +60,27 @@ public class TimerActivity extends AppCompatActivity{
             state = timer.getState();
         }
 
+        setColor();
+
         timer.initState();
 
         content = (FrameLayout) findViewById(R.id.main_content);
 
         statusDisplay = (TextView) findViewById(R.id.timer_status);
 
-        nextFrame = (FrameLayout) findViewById(R.id.timer_next_frame);
+        View.OnClickListener addStageListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (timer.getStageCount() == 0) switchToStages();
+            }
+        };
+        statusDisplay.setOnClickListener(addStageListener);
+        content.setOnClickListener(addStageListener);
+
+        nextFrame = (LinearLayout) findViewById(R.id.timer_next_frame);
         nextName = (TextView) findViewById(R.id.timer_next_stage_name);
         nextTime = (TextView) findViewById(R.id.timer_next_stage_time);
 
-        //TODO: rm debug stuff
         if (timer.getStageCount() != 0) {
             contentFragment = TimerStoppedFragment.newInstance(this, state);
             setContentFragment();
@@ -121,13 +133,34 @@ public class TimerActivity extends AppCompatActivity{
                 });
                 return true;
             case R.id.action_edit_stages:
-                Intent intent = new Intent(this, StageActivity.class);
-                Util.getDataHolder().setData(timer);
-                startActivity(intent);
+                if (state.isStopped()) switchToStages();
+                else Toast.makeText(getApplicationContext(), R.string.stop_first, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_change_color:
+                int color = timer.getColor();
+
+                //TODO: implement material palette selection
+                final ColorPicker cp = new ColorPicker(TimerActivity.this, Color.red(color), Color.green(color), Color.blue(color));
+                cp.setOnColorSelected(new OnColorSelected() {
+                    @Override
+                    public void returnColor(int col) {
+                        timer.setColor(col);
+                        setColor();
+                        cp.dismiss();
+                    }
+                });
+                cp.show();
+
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void switchToStages(){
+        Intent intent = new Intent(this, StageActivity.class);
+        Util.getDataHolder().setData(timer);
+        startActivity(intent);
     }
 
 
@@ -140,11 +173,12 @@ public class TimerActivity extends AppCompatActivity{
     @Override
     protected void onResume(){
         super.onResume();
-        Log.d(Util.TAG, "updating display...");
+        Log.d(Util.TAG, "timer stage count = " + timer.getStageCount());
 
         if (timer.getStageCount() == 0) {
             if (contentFragment != null) removeContentFragment();
-        }else if (contentFragment == null){
+        }else if (state.isStopped()){
+            removeContentFragment();
             contentFragment = TimerStoppedFragment.newInstance(this, state);
             setContentFragment();
         }
@@ -152,6 +186,7 @@ public class TimerActivity extends AppCompatActivity{
         for (TimerFragment f : removeOnResume) getSupportFragmentManager().beginTransaction().remove(f).commit();
 
         if (setOnResume != null){
+            contentFragment = setOnResume;
             getSupportFragmentManager().beginTransaction().add(R.id.main_content, setOnResume).commit();
         }
 
@@ -164,7 +199,8 @@ public class TimerActivity extends AppCompatActivity{
             Util.showConfirmBox(this, getString(R.string.exit_timer_title), getString(R.string.yes), getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    state.stop();
+                    state.stop(true);
+                    finish();
                 }
             }, new DialogInterface.OnClickListener() {
                 @Override
@@ -188,13 +224,15 @@ public class TimerActivity extends AppCompatActivity{
         }
         else nextFrame.setVisibility(View.INVISIBLE);
 
-        if (state.isStopped() && (contentFragment == null || !(contentFragment instanceof TimerStoppedFragment)))
+        if (state.isStopped() && (contentFragment == null || !(contentFragment instanceof TimerStoppedFragment))) {
+            Log.d(Util.TAG, "setting new fragment");
             swapContentFragment(TimerStoppedFragment.newInstance(this, state));
+        }
     }
 
     private void update(){
-        if (contentFragment != null) contentFragment.update();
         updateDisplay();
+        if (contentFragment != null) contentFragment.update();
     }
 
     public void startTimer(){
@@ -241,5 +279,10 @@ public class TimerActivity extends AppCompatActivity{
         removeContentFragment();
         contentFragment = f;
         setContentFragment();
+    }
+
+    private void setColor(){
+        int col = timer.getColor();
+        toolbar.setBackgroundColor(col);
     }
 }

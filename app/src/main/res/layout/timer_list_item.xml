@@ -28,5 +28,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/timer_list_item_details"/>
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_gravity="right">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:id="@+id/timer_list_item_completed"/>
+        </FrameLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

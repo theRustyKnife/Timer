@@ -5,35 +5,41 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.ByteBuffer;
 
 public class Util {
-    public static final String EXTRA_TIMER_KEY = "therustyknife.timer.extra_timer";
+    public static final String PREFS_KEY = "timer_prefs";
     public static final String TIMER_SAVE_PATH = "/timers/";
+
+    public static final String TIME_FORMAT_PREF_KEY = "time_format_index";
+    public static final String[] TIME_FORMATS = new String[]{ "%1$02d:%2$02d", "" };
+    public static int timeFormatIndex = 0;
 
     public static final long MILLIS_IN_SECOND = 1000;
 
     public static final String TAG = "therustyknife.timer";
 
+
     public static Context context;
+
 
     public static final String formatTime(int seconds){
         int minutes = seconds / 60;
         seconds = seconds % 60;
 
-        return String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+        return String.format(TIME_FORMATS[timeFormatIndex], minutes, seconds);
     }
     public static final String formatTime(long milis){ return formatTime((int)(milis / MILLIS_IN_SECOND)); }
+
+    public static int getHrs(int t){ return t / (60 * 60); }
+    public static int getMinsWithHrs(int t){ return (t / 60) % 60; }
+    public static int getSecsWithMins(int t){ return t % 60; }
 
     public static String makePath(String path){ return context.getFilesDir() + path; }
 
@@ -100,15 +106,15 @@ public class Util {
         if (file.exists()) file.delete();
     }
 
+
     public static final DataHolder getDataHolder(){ return DataHolder.getInstance(); }
+    static class DataHolder {
+        private Object data;
+        public Object getData(){ return data; }
+        public void setData(Object data){ this.data = data; }
+
+        private static final DataHolder instance = new DataHolder();
+        public static DataHolder getInstance(){ return instance; }
+    }
 }
 
-
-class DataHolder {
-    private Object data;
-    public Object getData(){ return data; }
-    public void setData(Object data){ this.data = data; }
-
-    private static final DataHolder instance = new DataHolder();
-    public static DataHolder getInstance(){ return instance; }
-}

@@ -5,7 +5,8 @@
     tools:context="therustyknife.timer.TimerStoppedFragment"
     android:orientation="vertical"
     android:id="@+id/running_layout"
-    android:gravity="center">
+    android:gravity="center"
+    android:keepScreenOn="true">>
 
     <TextView
         android:layout_width="wrap_content"

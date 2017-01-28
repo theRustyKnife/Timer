@@ -10,7 +10,7 @@ public class TimerState {
     private boolean stopped = true; // true - not started, false started
     private boolean pause = true;   // true - currently in the pause part of the current stage, false - in the main part of the current stage
 
-    private TimerRunSession currentSession = null;
+    private Session currentSession = null;
 
     private int position = -1;
 
@@ -33,6 +33,8 @@ public class TimerState {
             return false;
         }
         Log.d(Util.TAG, "timer has some valid stages");
+
+        timer.getStats().startNew();
 
         final Handler h = new Handler();
         final int delay = 100; //milliseconds
@@ -59,40 +61,61 @@ public class TimerState {
         currentSession.resume();
     }
 
-    public void stop(){
+    public void stop(boolean disruptive){
+        if (disruptive && currentSession != null){
+            int tTime = (int)(currentSession.getFinished() / Util.MILLIS_IN_SECOND);
+            if (pause) timer.getStats().addPause(tTime);
+            else timer.getStats().addTime(tTime);
+        }
+        timer.getStats().finish();
         position = -1;
+        currentSession = null;
         stopped = true;
     }
+    public void stop(){ stop(false); }
 
 
     // sets currentSession to the next session or calls stop() and returns false if done
-    private boolean next(){
+    private boolean next(boolean skipping){
         if (pause){ // we're in a pause - get the stage
             pause = false;
             TimerStage c = getNext(position, true);
+
+            if (currentSession != null) timer.getStats().addPause((int)(currentSession.getFinished() / Util.MILLIS_IN_SECOND));
+
             if (c == null){
                 stop();
                 return false;
             }
-            currentSession = new TimerRunSession((c.getTime() + 1) * Util.MILLIS_IN_SECOND);
+            currentSession = new Session((c.getTime()) * Util.MILLIS_IN_SECOND);
             return true;
         }
         else{ // we're in a stage - get the next stage's pause
+            if (currentSession != null){
+                int t = (int)(currentSession.getFinished() / Util.MILLIS_IN_SECOND);
+                if (skipping) timer.getStats().addPause(t);
+                else timer.getStats().addTime(t);
+            }
+
             TimerStage tNext = getNext(position, false);
+
             if (tNext == null){ // nowhere further to go
                 stop();
                 return false;
             }
             pause = true;
             if (tNext.getPauseBefore() <= 0) return next(); // pause is 0 - go on
-            else currentSession = new TimerRunSession((tNext.getPauseBefore() + 1) * Util.MILLIS_IN_SECOND);
+            else currentSession = new Session((tNext.getPauseBefore()) * Util.MILLIS_IN_SECOND);
             return true;
         }
     }
+    private boolean next(){ return next(false); }
     public boolean skip(){ // same as next() except it always goes to the next stage
         if (pause) position++;
+        timer.getStats().skip();
+        boolean tP = pause;
         pause = false;
-        return next();
+        return next(tP);
     }
 
 
@@ -149,40 +172,45 @@ public class TimerState {
         if (currentSession == null) return Util.formatTime(0);
         return Util.formatTime(currentSession.getRemaining());
     }
-}
 
 
-class TimerRunSession{
-    private long startTime;
-    private long duration;
-    private long done;
+    class Session{
+        private long startTime;
+        private long duration;
+        private long done;
 
 
-    // create new session and sart it
-    TimerRunSession(long duration){
-        this.duration = duration;
-        startTime = System.currentTimeMillis();
-    }
-    // pause if not already paused
-    void pause(){
-        if (done == 0) done = System.currentTimeMillis() - startTime;
-    }
-    //resume if not already resumed
-    void resume(){
-        startTime = System.currentTimeMillis() - done;
-        done = 0;
-    }
-    // true if done and not paused - should be deleted if done
-    boolean isDone(){
-        return done == 0 && System.currentTimeMillis() - startTime >= duration;
-    }
+        // create new session and sart it
+        Session(long duration){
+            this.duration = duration;
+            startTime = System.currentTimeMillis();
+        }
+        // pause if not already paused
+        void pause(){
+            if (done == 0) done = System.currentTimeMillis() - startTime;
+        }
+        //resume if not already resumed
+        void resume(){
+            startTime = System.currentTimeMillis() - done;
+            done = 0;
+        }
+        // true if done and not paused - should be deleted if done
+        boolean isDone(){
+            return done == 0 && System.currentTimeMillis() - startTime >= duration;
+        }
 
-    boolean isPaused(){ return done != 0; }
+        boolean isPaused(){ return done != 0; }
 
-    long getRemaining(){
-        long t = startTime - System.currentTimeMillis() + duration;
-        if (done != 0) return duration - done;
-        if (t < 0) return 0;
-        return t;
+        long getRemaining(){
+            long t = startTime - System.currentTimeMillis() + duration;
+            if (done != 0) return duration - done;
+            if (t < 0) return 0;
+            return t;
+        }
+
+        long getFinished(){
+            if (done != 0) return done;
+            return System.currentTimeMillis() - startTime;
+        }
     }
 }
