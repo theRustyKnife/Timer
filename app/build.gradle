@@ -35,6 +35,7 @@ dependencies {
 
     compile 'com.kovachcode:timePickerWithSeconds:1.0.0'
     compile 'com.pes.materialcolorpicker:library:1.0.+'
+    compile 'joda-time:joda-time:2.9.4'
 
     testCompile 'junit:junit:4.12'
 }

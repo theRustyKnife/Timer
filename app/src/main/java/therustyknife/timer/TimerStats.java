@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 
 public class TimerStats implements Serializable {
+    protected static final long serialVersionUID = 7897957532676179007L;
+
     // we're going to save the users progress in a timer here
     // how many times the timer has been finished
     // how many times the timer has been aborted
@@ -64,8 +66,18 @@ public class TimerStats implements Serializable {
         return res;
     }
 
+    public int getRunInDay(int dayOffset){
+        int res = 0;
+        for (Session s : TimeUtil.getInDay(sessions, dayOffset)){
+            res += s.time + s.pauses;
+        }
+        return res;
+    }
+
 
     class Session implements Serializable {
+        protected static final long serialVersionUID = -2746575701570301509L;
+
         private long startedAt = 0;
 
         private boolean finished = false;
@@ -77,5 +89,8 @@ public class TimerStats implements Serializable {
         public Session(long startedAt){
             this.startedAt = startedAt;
         }
+
+
+        public long getStartedAt(){ return startedAt; }
     }
 }

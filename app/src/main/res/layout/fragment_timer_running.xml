@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="therustyknife.timer.TimerStoppedFragment"
+    tools:context="therustyknife.timer.Fragments.TimerStoppedFragment"
     android:orientation="vertical"
     android:id="@+id/running_layout"
     android:gravity="center"

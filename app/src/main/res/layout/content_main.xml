@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="therustyknife.timer.MainActivity"
+    tools:context="therustyknife.timer.Activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <ScrollView
@@ -21,10 +21,10 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="yO IMMA FUKEN TEKST"/>
+                android:id="@+id/calendar_container_frame"/>
 
             <therustyknife.timer.Views.NestedListView
                 android:layout_width="match_parent"

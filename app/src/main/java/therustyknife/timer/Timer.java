@@ -2,7 +2,11 @@ package therustyknife.timer;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Path;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -15,15 +19,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 
 public class Timer implements Serializable{
+    protected static final long serialVersionUID = -28997423111818821L;
+
+
     private static ArrayList<Timer> list = new ArrayList<Timer>();
 
 
@@ -154,6 +164,7 @@ public class Timer implements Serializable{
     }
 
     public String getName(){ return displayName; }
+    public void setName(String name){ this.displayName = name; }
 
     public int getStageCount(){ return stages.size(); }
 
