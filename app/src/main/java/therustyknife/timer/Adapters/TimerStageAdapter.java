@@ -1,6 +1,7 @@
 package therustyknife.timer.Adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.content.DialogInterface;
@@ -29,10 +30,13 @@ import therustyknife.timer.Util;
 
 public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
     private ArrayList<TimerStage> stages;
+    private Activity activity;
 
-    public TimerStageAdapter(Context context, ArrayList<TimerStage> stages){
-        super(context, R.layout.stage_list_item, stages);
+
+    public TimerStageAdapter(Activity activity, ArrayList<TimerStage> stages){
+        super(activity, R.layout.stage_list_item, stages);
         this.stages = stages;
+        this.activity = activity;
     }
 
 
@@ -75,15 +79,24 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
         number.setText(parent.getContext().getText(R.string.stage_n).toString() + (position + 1));
 
         // name
-        EditText name = (EditText) convertView.findViewById(R.id.stage_list_item_name);
-        name.addTextChangedListener(new TextWatcher() {
+        final TextView name = (TextView) convertView.findViewById(R.id.stage_list_item_name);
+        name.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override
-            public void afterTextChanged(Editable editable) {
-                stage.setName(editable.toString());
+            public void onClick(View view) {
+                Util.showTextQuery(
+                        activity,
+                        getContext().getString(R.string.stage_change_name),
+                        getContext().getString(R.string.ask_stage_name_description),
+                        stage.getName(),
+                        getContext().getString(R.string.ok),
+                        stage.getName(),
+                        new Util.OnTextEnteredListener() {
+                            @Override
+                            public void onTextEntered(String text) {
+                                stage.setName(text);
+                                name.setText(text);
+                            }
+                });
             }
         });
         name.setText(stage.getName());

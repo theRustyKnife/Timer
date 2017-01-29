@@ -29,6 +29,7 @@
     <string name="pause_after">"Pause after: "</string>
 
     <string name="ask_stage_name_title">Add new stage</string>
+    <string name="stage_change_name">Change stage name</string>
     <string name="ask_stage_name_description">"Name: "</string>
     <string name="ask_stage_name_ok">ADD</string>
     <string name="ask_stage_name_cancel">CANCEL</string>

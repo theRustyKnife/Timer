@@ -75,22 +75,25 @@ public class Util {
         alertDialog.show();
     }
 
-    public static void showTextQuery(Activity a, String title, String description, String hint, String positiveText, String negativeText, final OnTextEnteredListener listener){
+    public static void showTextQuery(Activity a, String title, String description, String hint, String positiveText, String negativeText, String text, final OnTextEnteredListener listener){
         AlertDialog alertDialog = new AlertDialog.Builder(a).create();
         alertDialog.setTitle(title);
 
         final View v = a.getLayoutInflater().inflate(R.layout.text_query_layout, null);
         TextView label = (TextView) v.findViewById(R.id.text_query_label);
-        final EditText text = (EditText) v.findViewById(R.id.text_query_text);
+        final EditText input = (EditText) v.findViewById(R.id.text_query_text);
         label.setText(description);
-        text.setHint(hint);
+        input.setHint(hint);
+        if (text != null) input.setText(text);
 
         alertDialog.setView(v);
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, positiveText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onTextEntered(text.getText().toString());
+                String res = input.getText().toString();
+                if (res.equals("")) res = input.getHint().toString();
+                listener.onTextEntered(res);
             }
         });
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, negativeText, new DialogInterface.OnClickListener() {
@@ -104,8 +107,11 @@ public class Util {
 
         alertDialog.show();
     }
+    public static void showTextQuery(Activity a, String title, String description, String hint, String positiveText, String text, final OnTextEnteredListener listener){
+        showTextQuery(a, title, description, hint, positiveText, a.getString(R.string.cancel), text, listener);
+    }
     public static void showTextQuery(Activity a, String title, String description, String hint, String positiveText, final OnTextEnteredListener listener){
-        showTextQuery(a, title, description, hint, positiveText, a.getString(R.string.cancel), listener);
+        showTextQuery(a, title, description, hint, positiveText, null, listener);
     }
     public static void showTextQuery(Activity a, String title, String description, String hint, final OnTextEnteredListener listener){
         showTextQuery(a, title, description, hint, a.getString(R.string.ok), listener);

@@ -32,8 +32,11 @@
                 android:id="@+id/timer_list"
                 android:dividerHeight="0dp"
                 android:divider="@null"
-                android:focusable="false">
-            </therustyknife.timer.Views.NestedListView>
+                android:focusable="false"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
