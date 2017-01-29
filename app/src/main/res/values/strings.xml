@@ -58,6 +58,8 @@
 
     <string name="action_rename">Rename</string>
 
+    <string name="edit_stage_warning">Editing stages will stop the timer. Continue?</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

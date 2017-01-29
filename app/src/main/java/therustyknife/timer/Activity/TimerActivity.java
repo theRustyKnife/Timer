@@ -142,7 +142,15 @@ public class TimerActivity extends AppCompatActivity{
                 return true;
             case R.id.action_edit_stages:
                 if (state.isStopped()) switchToStages();
-                else Toast.makeText(getApplicationContext(), R.string.stop_first, Toast.LENGTH_SHORT).show();
+                else {
+                    Util.showConfirmBox(this, getString(R.string.edit_stage_warning), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            state.stop();
+                            switchToStages();
+                        }
+                    });
+                }
                 return true;
             case R.id.action_change_color:
                 int color = timer.getColor();
@@ -165,6 +173,8 @@ public class TimerActivity extends AppCompatActivity{
                         TimerActivity.this,
                         getString(R.string.timer_rename),
                         getString(R.string.ask_timer_name_description),
+                        timer.getName(),
+                        getString(R.string.ok),
                         timer.getName(),
                         new Util.OnTextEnteredListener() {
                             @Override

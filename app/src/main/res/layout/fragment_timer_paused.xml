@@ -16,10 +16,21 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_skip_previous_black_48dp"
-            android:background="@null"
+            android:background="?android:selectableItemBackground"
             android:alpha="@string/button_alpha"
             android:id="@+id/prev"/>
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_arrow_white_48dp"
+            android:id="@+id/play"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
+<!--
         <ImageButton
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -30,19 +41,18 @@
             android:scaleType="fitXY"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
-
+-->
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_skip_next_black_48dp"
-            android:background="@null"
+            android:background="?android:selectableItemBackground"
             android:alpha="@string/button_alpha"
             android:id="@+id/next"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"

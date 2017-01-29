@@ -40,12 +40,12 @@ public class CalendarContainerFragment extends Fragment{
                     if (contentFragment instanceof QuickCalendarFragment){
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_36dp));
 
-                        //TODO: switch the fragments
+                        swapContentFragment(CalendarBigFragment.newInstance());
                     }
                     else{
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
 
-                        //TODO: switch the fragments
+                        swapContentFragment(QuickCalendarFragment.newInstance());
                     }
                 }
             }

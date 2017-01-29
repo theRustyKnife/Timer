@@ -24,7 +24,7 @@
             android:id="@+id/timer_status"
             android:layout_gravity="top"
             android:textAlignment="center"
-            android:textSize="37sp"/>
+            android:textSize="36sp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
