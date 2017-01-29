@@ -32,6 +32,25 @@ public class CalendarContainerFragment extends Fragment{
         contentFragment = QuickCalendarFragment.newInstance();
         setContentFragment();
 
+        final ImageButton expandButton = (ImageButton) view.findViewById(R.id.calendar_expand_button);
+        expandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (contentFragment != null){
+                    if (contentFragment instanceof QuickCalendarFragment){
+                        expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_36dp));
+
+                        //TODO: switch the fragments
+                    }
+                    else{
+                        expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
+
+                        //TODO: switch the fragments
+                    }
+                }
+            }
+        });
+
         return view;
     }
 

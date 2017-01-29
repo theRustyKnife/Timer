@@ -31,6 +31,8 @@ public class TimerAdapter extends ArrayAdapter<Timer> {
         TextView tvdetails = (TextView) convertView.findViewById(R.id.timer_list_item_details);
         TextView tvcompleted = (TextView) convertView.findViewById(R.id.timer_list_item_completed);
 
+        convertView.findViewById(R.id.color_display).setBackgroundColor(timer.getColor());
+
         tvname.setText(timer.getName());
         tvdetails.setText(getContext().getText(R.string.total_length) + "" + Util.formatTime(timer.getTotalLength()) + getContext().getText(R.string.stage_length_separator) + timer.getStageCount() + getContext().getText(R.string.stage_count));
         tvcompleted.setText(Util.formatTime(timer.getStats().getRunTime()));
