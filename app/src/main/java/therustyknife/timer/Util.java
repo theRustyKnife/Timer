@@ -82,14 +82,13 @@ public class Util {
 
         alertDialog.show();
     }
-    public static void showConfirmBox(Activity a, String title, DialogInterface.OnClickListener positiveListener){
-        showConfirmBox(a, title, a.getString(R.string.ok), a.getString(R.string.cancel), positiveListener, new DialogInterface.OnClickListener() {
+    public static void showConfirmBox(Activity a, String title, String positiveText, String negativeText, DialogInterface.OnClickListener positiveListener){
+        showConfirmBox(a, title, positiveText, negativeText, positiveListener, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
+            public void onClick(DialogInterface dialogInterface, int i){ dialogInterface.dismiss(); }
         });
     }
+    public static void showConfirmBox(Activity a, String title, DialogInterface.OnClickListener positiveListener){ showConfirmBox(a, title, a.getString(R.string.ok), a.getString(R.string.cancel), positiveListener); }
 
     public static void showTextQuery(Activity a, String title, String description, String hint, String positiveText, String negativeText, String text, final OnTextEnteredListener listener){
         AlertDialog alertDialog = new AlertDialog.Builder(a).create();

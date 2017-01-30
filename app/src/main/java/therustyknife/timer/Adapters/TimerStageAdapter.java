@@ -28,8 +28,9 @@ import therustyknife.timer.TimerStage;
 import therustyknife.timer.Util;
 
 
+// an adapter for the stage list, handles stage editing
 public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
-    private ArrayList<TimerStage> stages;
+    private ArrayList<TimerStage> stages; // for stage removal
     private Activity activity;
 
 
@@ -42,47 +43,47 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        // get the stage in question
         final TimerStage stage = getItem(position);
 
         // always create new view to prevent data loss or duplication and other problems like that
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.stage_list_item, parent, false);
 
-        // delete button
+        // get references to our views
         Button delete = (Button) convertView.findViewById(R.id.stage_list_item_delete);
+        TextView number = (TextView) convertView.findViewById(R.id.stage_list_item_number);
+        final TextView name = (TextView) convertView.findViewById(R.id.stage_list_item_name);
+        final TextView pauseBefore = (TextView) convertView.findViewById(R.id.stage_list_item_pause_before);
+        final TextView duration = (TextView) convertView.findViewById(R.id.stage_list_item_duration);
+
+        // set up the delete button
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                AlertDialog alertDialog = new AlertDialog.Builder(StageActivity.getCurrent()).create();
-                alertDialog.setTitle(getContext().getString(R.string.delete_title));
-
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getContext().getText(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        stages.remove(position);
-                        notifyDataSetChanged();
-                    }
-                });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getContext().getText(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                alertDialog.show();
+                // ask the user if she's sure she wants to delete the stage
+                Util.showConfirmBox(
+                        activity,
+                        getContext().getString(R.string.delete_title),
+                        getContext().getString(R.string.yes),
+                        getContext().getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                stages.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        });
             }
         });
 
-        //id - can't be edited luckily
-        TextView number = (TextView) convertView.findViewById(R.id.stage_list_item_number);
+        // id - can't be edited luckily
         number.setText(parent.getContext().getText(R.string.stage_n).toString() + (position + 1));
 
         // name
-        final TextView name = (TextView) convertView.findViewById(R.id.stage_list_item_name);
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // ask the user to enter a new name for the stage
                 Util.showTextQuery(
                         activity,
                         getContext().getString(R.string.stage_change_name),
@@ -101,19 +102,18 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
         });
         name.setText(stage.getName());
 
-
-        // all the times //TODO: change this to some other view type
-        final TextView pauseBefore = (TextView) convertView.findViewById(R.id.stage_list_item_pause_before);
+        // the pause time
         pauseBefore.setText(Util.formatTime(stage.getPauseBefore()));
         pauseBefore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int t = stage.getPauseBefore();
+                int t = stage.getPauseBefore(); // get the pause before to start with
 
+                // display the time picker //TODO: remove hours from selection options
                 MyTimePickerDialog mTimePicker = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
-
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                        // update the stage and the display
                         stage.setPauseBefore(hourOfDay * 60 * 60 + minute * 60 + seconds);
                         pauseBefore.setText(Util.formatTime(stage.getPauseBefore()));
                     }
@@ -122,16 +122,18 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
             }
         });
 
-        final TextView duration = (TextView) convertView.findViewById(R.id.stage_list_item_duration);
+        // the duration
         duration.setText(Util.formatTime(stage.getTime()));
         duration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int t = stage.getTime();
-                MyTimePickerDialog mTimePicker = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
+                int t = stage.getTime(); // get the time to start with
 
+                // display the time picker //TODO: same as above
+                MyTimePickerDialog mTimePicker = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                        // update the stage and the display
                         stage.setTime(hourOfDay * 60 * 60 + minute * 60 + seconds);
                         duration.setText(Util.formatTime(stage.getTime()));
                     }
