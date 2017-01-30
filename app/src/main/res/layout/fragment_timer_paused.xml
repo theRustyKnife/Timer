@@ -20,9 +20,10 @@
             android:alpha="@string/button_alpha"
             android:id="@+id/prev"/>
 
+        <!--70dpx70dp-->
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_play_arrow_white_48dp"
             android:id="@+id/play"

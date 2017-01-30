@@ -4,4 +4,14 @@
         <item>01:28</item>
         <item>1m 28s</item>
     </array>
+
+    <array name="day_names">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </array>
 </resources>

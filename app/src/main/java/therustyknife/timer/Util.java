@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -63,6 +64,13 @@ public class Util {
             return true;
         }
         return false;
+    }
+
+    public static float dpToPx(float dp){
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+    public static float pxToDp(float px){
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, context.getResources().getDisplayMetrics());
     }
 
     public static void showConfirmBox(Activity a, String title, String positiveText, String negativeText, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){

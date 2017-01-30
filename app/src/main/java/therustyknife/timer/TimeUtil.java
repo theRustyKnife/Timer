@@ -23,4 +23,18 @@ public final class TimeUtil {
         }
         return res;
     }
+
+    public static float getDayProgressPercent(long time){
+        DateTime day = new DateTime(time);
+        time -= day.withTimeAtStartOfDay().getMillis();
+
+        return (float)(time / (24*60*60*1000.0));
+    }
+
+    public static float getDayPercent(long time) {
+        return (float)(time / (24*60*60*1000.0));
+    }
+    public static float getDayPercent(int time){
+        return getDayPercent(1000L * time);
+    }
 }

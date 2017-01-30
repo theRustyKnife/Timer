@@ -1,12 +1,14 @@
 package therustyknife.timer.Fragments;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -33,7 +35,8 @@ public class CalendarContainerFragment extends Fragment{
         setContentFragment();
 
         final ImageButton expandButton = (ImageButton) view.findViewById(R.id.calendar_expand_button);
-        expandButton.setOnClickListener(new View.OnClickListener() {
+
+        final View.OnClickListener expandClick = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (contentFragment != null){
@@ -49,7 +52,10 @@ public class CalendarContainerFragment extends Fragment{
                     }
                 }
             }
-        });
+        };
+
+        view.findViewById(R.id.calendar_expand_layout).setOnClickListener(expandClick);
+        expandButton.setOnClickListener(expandClick);
 
         return view;
     }
@@ -72,6 +78,13 @@ public class CalendarContainerFragment extends Fragment{
     @Override
     public void onResume(){
         super.onResume();
-        if (contentFragment != null) contentFragment.resume();
+        if (contentFragment != null) {
+            if (contentFragment instanceof QuickCalendarFragment) contentFragment.resume();
+            else{
+                final ImageButton expandButton = (ImageButton) getView().findViewById(R.id.calendar_expand_button);
+                expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
+                swapContentFragment(QuickCalendarFragment.newInstance());
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package therustyknife.timer;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -74,8 +75,12 @@ public class TimerStats implements Serializable {
         return res;
     }
 
+    public ArrayList<Session> getSessionsInDay(int dayOffset){
+        return TimeUtil.getInDay(sessions, dayOffset);
+    }
 
-    class Session implements Serializable {
+
+    public class Session implements Serializable {
         protected static final long serialVersionUID = -2746575701570301509L;
 
         private long startedAt = 0;
@@ -92,5 +97,16 @@ public class TimerStats implements Serializable {
 
 
         public long getStartedAt(){ return startedAt; }
+
+        public int getLength(){ return time + pauses; }
+
+        // work-around to find the timer this session belongs to to prevent deserialization issues
+        public Timer getTimer(){
+            for (Timer t : Timer.getList()){
+                for (Session s : t.getStats().sessions)
+                    if (s == this) return t;
+            }
+            return null;
+        }
     }
 }

@@ -11,6 +11,7 @@
     <color name="colorDivider">#BDBDBD</color>
 
     <color name="time_background">#1000</color>
+    <color name="time_line">#3000</color>
 
     <string name="button_alpha">"0.6"</string>
 </resources>
