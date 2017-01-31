@@ -212,7 +212,7 @@ public class TimerActivity extends AppCompatActivity{
         super.onPause();
 
         // save the timer list to make sure it's up-to-date
-        Timer.saveList(getApplicationContext());
+        Timer.saveList();
     }
 
     @Override

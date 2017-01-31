@@ -92,7 +92,7 @@ public class StageActivity extends AppCompatActivity {
         super.onPause();
 
         //save the timer to make sure it's up-to-date
-        timer.save(getApplicationContext());
+        timer.save();
     }
 
 

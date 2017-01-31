@@ -10,6 +10,9 @@ import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+
+// a ListView for use inside a ScrollView
+// code from StackOverflow
 public class NestedListView extends ListView implements View.OnTouchListener, AbsListView.OnScrollListener {
 
     private int listViewTouchAction;

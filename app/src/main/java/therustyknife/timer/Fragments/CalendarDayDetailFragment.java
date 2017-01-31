@@ -11,9 +11,8 @@ import org.joda.time.DateTime;
 import therustyknife.timer.R;
 
 
+// TODO: finish
 public class CalendarDayDetailFragment extends CalendarFragment {
-    public CalendarDayDetailFragment(){}
-
     public static CalendarDayDetailFragment newInstance() { return new CalendarDayDetailFragment(); }
 
 

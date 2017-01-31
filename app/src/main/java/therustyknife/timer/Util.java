@@ -27,6 +27,9 @@ import java.util.zip.ZipOutputStream;
 
 import therustyknife.timer.Activity.MainActivity;
 
+
+// the most randomest class that exists on this planet...
+//TODO: clean up you filthy bastard!
 public class Util {
     public static final String PREFS_KEY = "timer_prefs";
     public static final String TIMER_SAVE_PATH = "/timers/";

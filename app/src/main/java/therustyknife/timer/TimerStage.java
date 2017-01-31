@@ -3,6 +3,8 @@ package therustyknife.timer;
 
 import java.io.Serializable;
 
+
+// this class represents a stage in a timer, with duration and a pause
 public class TimerStage implements Serializable {
     private String name;
 

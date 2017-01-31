@@ -10,6 +10,7 @@ import org.joda.time.Interval;
 import java.util.ArrayList;
 
 
+// random time related functions
 public final class TimeUtil {
     // returns all the sessions from the day with the offset of days from now
     public static ArrayList<TimerStats.Session> getInDay(ArrayList<TimerStats.Session> sessions, int days){

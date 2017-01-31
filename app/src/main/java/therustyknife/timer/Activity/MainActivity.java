@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Util.context = getApplicationContext();
 
         // load the timer list from storage
-        Timer.loadList(getApplicationContext());
+        Timer.loadList();
 
         // set up the add button
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         // make sure an up-to-date version of the timer list is saved
-        Timer.saveList(getApplicationContext());
+        Timer.saveList();
     }
 
     @Override

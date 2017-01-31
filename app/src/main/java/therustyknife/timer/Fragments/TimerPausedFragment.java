@@ -1,5 +1,6 @@
 package therustyknife.timer.Fragments;
 
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,10 @@ import therustyknife.timer.TimerState;
 import therustyknife.timer.Util;
 
 
+// the fragment that's shown when a timer is paused by the user
+// contains the resume button, the previous and next buttons and the timer remaining to finish the current stage
 public class TimerPausedFragment extends TimerFragment {
-    private TextView timeRemaining;
-
-
+    // make a new instance of this fragment with the state and activity that got passed in
     public static TimerPausedFragment newInstance(TimerActivity activity, TimerState state) {
         argState = state;
         return (TimerPausedFragment) new TimerPausedFragment().setActivity(activity);
@@ -28,37 +29,23 @@ public class TimerPausedFragment extends TimerFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timer_paused, container, false);
 
-        timeRemaining = (TextView) view.findViewById(R.id.time_remaining);
+        // set the remaining time text
+        ((TextView) view.findViewById(R.id.time_remaining)).setText(state.getRemainingTime());
 
-        ((ImageButton) view.findViewById(R.id.prev)).setOnClickListener(new View.OnClickListener() {
+        // set the button onClick listeners
+        view.findViewById(R.id.prev).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Log.d(Util.TAG, "clicked prev");
-                activity.prevTimer();
-            }
+            public void onClick(View view){ activity.prevTimer(); }
         });
-        ((ImageButton) view.findViewById(R.id.play)).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Log.d(Util.TAG, "clicked play");
-                activity.resumeTimer();
-            }
+            public void onClick(View view){ activity.resumeTimer(); }
         });
-        ((ImageButton) view.findViewById(R.id.next)).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Log.d(Util.TAG, "clicked next");
-                activity.skipTimer();
-            }
+            public void onClick(View view){ activity.skipTimer(); }
         });
-
-        update();
 
         return view;
-    }
-
-    @Override
-    public void update(){
-        if (state != null && timeRemaining != null) timeRemaining.setText(state.getRemainingTime());
     }
 }
