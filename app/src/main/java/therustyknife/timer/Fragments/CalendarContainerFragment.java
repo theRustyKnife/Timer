@@ -45,7 +45,14 @@ public class CalendarContainerFragment extends Fragment{
                     if (contentFragment instanceof QuickCalendarFragment){
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_36dp));
 
-                        swapContentFragment(CalendarBigFragment.newInstance());
+                        // set the big calendar fragment and listen for day clicks
+                        swapContentFragment(CalendarBigFragment.newInstance(new CalendarBigFragment.OnDetailsRequestedListener() {
+                            @Override
+                            public void onDetailsRequested(int dayOffset) {
+                                // display the day detail
+                                swapContentFragment(CalendarDayDetailFragment.newInstance(dayOffset));
+                            }
+                        }));
                     }
                     else{
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));

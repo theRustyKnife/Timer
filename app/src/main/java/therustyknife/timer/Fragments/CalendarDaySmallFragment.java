@@ -30,31 +30,62 @@ import therustyknife.timer.Util;
 
 // the fragment that shows the days with timelines
 public class CalendarDaySmallFragment extends Fragment {
+    // the onClick listener
+    private OnDayClickListener onClickListener;
+
     // again, a hack around the fact that we can't pass in arguments to the constructor
     private static int argDayOffset;
     // determines the day that will be shown, 0 being today and negative the days that had passed
     // positive numbers will cause the time sum to show "--"
     private int dayOffset;
 
+    // the height that'll be used for this fragment
+    private static int argHeight;
+    private int height;
+
 
     public CalendarDaySmallFragment(){
         // set up the fields
         this.dayOffset = argDayOffset;
         argDayOffset = 0;
+        this.height = argHeight;
+        argHeight = 0;
     }
 
-    public static CalendarDaySmallFragment newInstance(int dayOffset) {
-        // hack-pass the day offset to the constructor, ugh
+    public static CalendarDaySmallFragment newInstance(int dayOffset, int height) {
+        // hack-pass the day offset and height to the constructor, ugh
         argDayOffset = dayOffset;
+        argHeight = height;
 
         return new CalendarDaySmallFragment();
     }
+    public static CalendarDaySmallFragment newInstance(int dayOffset){ return newInstance(dayOffset, (int)Util.context.getResources().getDimension(R.dimen.day_small_default_height)); }
     public static CalendarDaySmallFragment newInstance(){ return newInstance(0); } // default day to today
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_day_small, container, false);
+
+        // pass the click events
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onClickListener != null) onClickListener.onClick(dayOffset);
+            }
+        });
+
+        // get references to the container view and background
+        View timeline = view.findViewById(R.id.timeline);
+        View bg = view.findViewById(R.id.timeline_bg);
+
+        // set the height of the container and background - this will resize the entire view
+        ViewGroup.LayoutParams paramsTL = timeline.getLayoutParams();
+        ViewGroup.LayoutParams paramsBG = bg.getLayoutParams();
+        paramsTL.height = height;
+        paramsBG.height = height;
+        timeline.setLayoutParams(paramsTL);
+        bg.setLayoutParams(paramsBG);
 
         // set the text into the day name
         ((TextView) view.findViewById(R.id.day_small_name)).setText(getResources().getStringArray(R.array.day_names)[DateTime.now().dayOfWeek().get() + dayOffset - 1]);
@@ -138,5 +169,13 @@ public class CalendarDaySmallFragment extends Fragment {
         // reset the timeline background to prevent that weird "setColor() affecting Views that it shouldn't" bug
         GradientDrawable bg = (GradientDrawable) getView().findViewById(R.id.timeline_bg).getBackground();
         bg.setColor(getResources().getColor(R.color.time_line));
+    }
+
+
+    public void setOnDayClickListener(OnDayClickListener listener){ this.onClickListener = listener; }
+
+
+    public interface OnDayClickListener{
+        void onClick(int dayOffset);
     }
 }

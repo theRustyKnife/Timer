@@ -23,7 +23,7 @@
 
         <View
             android:layout_width="2dp"
-            android:layout_height="@dimen/day_small_height"
+            android:layout_height="@dimen/day_small_default_height"
             android:background="@drawable/rect"
             android:layout_gravity="center"
             android:id="@+id/timeline_bg"/>
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:layout_height="@dimen/day_small_height"
+            android:layout_height="@dimen/day_small_default_height"
             android:id="@+id/timeline">
         </FrameLayout>
     </FrameLayout>

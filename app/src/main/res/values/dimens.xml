@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="design_fab_size_mini">100dp</dimen>
-    <dimen name="day_small_height">300dp</dimen>
+    <dimen name="day_small_default_height">300dp</dimen>
+    <dimen name="day_detail_view_height">340dp</dimen>
+    <dimen name="day_detail_timeline_height">4000dp</dimen>
     <dimen name="bar_width">10dp</dimen>
 </resources>
