@@ -145,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         notifyDataChanged();
     }
 
+    @Override
+    public void onBackPressed(){
+        if (calendar != null && calendar.onBackPressed()) return;
+        super.onBackPressed();
+    }
+
 
     // switches to the timer activity with the passed-in timer
     public void switchTo(Timer t){

@@ -11,41 +11,50 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:layout_marginBottom="5dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="left">
+                android:gravity="top"
+                android:layout_marginBottom="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:id="@+id/stage_list_item_number"
-                    android:textSize="23sp"
-                    android:layout_gravity="top"/>
+                    android:orientation="horizontal"
+                    android:gravity="left"
+                    android:layout_gravity="left">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:background="@drawable/rounded_corner"
-                    android:paddingLeft="5dp"
-                    android:maxWidth="175dp"
-                    android:minWidth="80dp"
-                    android:layout_marginTop="2dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="1dp"
-                    android:paddingBottom="4dp"
-                    android:id="@+id/stage_list_item_name"
-                    android:layout_gravity="top"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/stage_list_item_number"
+                        android:textSize="23sp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="1.5dp"/>
 
-                <Button
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="19sp"
+                        android:background="@drawable/rounded_corner"
+                        android:paddingLeft="5dp"
+                        android:minWidth="80dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="1dp"
+                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/stage_list_item_name"/>
+                </LinearLayout>
+
+                <!--<Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/stage_list_item_delete"
@@ -53,8 +62,21 @@
                     android:textSize="13sp"
                     android:minHeight="40dp"
                     android:minWidth="10dp"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="right"/>-->
+
+                <ImageButton
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:id="@+id/stage_list_item_delete"
+                    android:scaleType="fitCenter"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    android:background="?android:selectableItemBackground"
+                    android:alpha="@string/button_alpha"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -63,56 +85,37 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <!-- The left column - titles -->
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="right">
+                    android:textSize="14sp"
+                    android:padding="5dp"
+                    android:text="@string/pause_before"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:layout_marginTop="7dp"
-                        android:padding="5dp"
-                        android:text="@string/pause_before"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/duration"
-                        android:textSize="14sp"
-                        android:padding="5dp"
-                        android:layout_marginTop="10dp"/>
-                </LinearLayout>
-
-                <!-- The right column - values -->
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="left">
+                    android:id="@+id/stage_list_item_pause_before"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_corner"
+                    android:padding="5dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_pause_before"
-                        android:textSize="14sp"
-                        android:layout_marginTop="7dp"
-                        android:background="@drawable/rounded_corner"
-                        android:padding="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/duration"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="8dp"
+                    android:padding="5dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/stage_list_item_duration"
-                        android:textSize="14sp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/rounded_corner"
-                        android:padding="5dp"/>
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/stage_list_item_duration"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_corner"
+                    android:padding="5dp"/>
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

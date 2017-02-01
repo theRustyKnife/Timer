@@ -23,7 +23,7 @@
 
     <string name="title_activity_stage">StageActivity</string>
 
-    <string name="stage_n">"Stage #"</string>
+    <string name="stage_n">"#"</string>
     <string name="pause_before">"Pause before: "</string>
     <string name="duration">"Duration: "</string>
     <string name="pause_after">"Pause after: "</string>
@@ -59,6 +59,8 @@
     <string name="action_rename">Rename</string>
 
     <string name="edit_stage_warning">Editing stages will stop the timer. Continue?</string>
+
+    <string name="deleted">"Deleted "</string>
 
     <!-- Strings related to Settings -->
 

@@ -37,6 +37,8 @@ public class CalendarDayDetailFragment extends CalendarFragment {
         timeline = CalendarDaySmallFragment.newInstance(dayOffset, (int)getResources().getDimension(R.dimen.day_detail_timeline_height));
         getChildFragmentManager().beginTransaction().add(R.id.timeline_container, timeline).commit();
 
+        //TODO: add names and times and stuff...
+
         return view;
     }
 

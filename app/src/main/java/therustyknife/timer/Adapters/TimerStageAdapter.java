@@ -2,19 +2,15 @@ package therustyknife.timer.Adapters;
 
 
 import android.app.Activity;
-import android.content.Context;
 
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
@@ -22,8 +18,8 @@ import com.ikovac.timepickerwithseconds.TimePicker;
 
 import java.util.ArrayList;
 
-import therustyknife.timer.Activity.StageActivity;
 import therustyknife.timer.R;
+import therustyknife.timer.Timer;
 import therustyknife.timer.TimerStage;
 import therustyknife.timer.Util;
 
@@ -50,12 +46,13 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.stage_list_item, parent, false);
 
         // get references to our views
-        Button delete = (Button) convertView.findViewById(R.id.stage_list_item_delete);
+        View delete = convertView.findViewById(R.id.stage_list_item_delete);
         TextView number = (TextView) convertView.findViewById(R.id.stage_list_item_number);
         final TextView name = (TextView) convertView.findViewById(R.id.stage_list_item_name);
         final TextView pauseBefore = (TextView) convertView.findViewById(R.id.stage_list_item_pause_before);
         final TextView duration = (TextView) convertView.findViewById(R.id.stage_list_item_duration);
 
+        final ViewGroup snackParent = (ViewGroup) convertView;
         // set up the delete button
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +68,8 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
                             public void onClick(DialogInterface dialog, int which) {
                                 stages.remove(position);
                                 notifyDataSetChanged();
+                                Snackbar.make(snackParent, getContext().getString(R.string.deleted) + stage.getName(), Snackbar.LENGTH_SHORT).show();
+                                Timer.saveList();
                             }
                         });
             }
@@ -117,7 +116,7 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
                         stage.setPauseBefore(hourOfDay * 60 * 60 + minute * 60 + seconds);
                         pauseBefore.setText(Util.formatTime(stage.getPauseBefore()));
                     }
-                }, Util.getHrs(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
+                }, Util.getHrsNoDays(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
                 mTimePicker.show();
             }
         });
@@ -137,7 +136,7 @@ public class TimerStageAdapter extends ArrayAdapter<TimerStage> {
                         stage.setTime(hourOfDay * 60 * 60 + minute * 60 + seconds);
                         duration.setText(Util.formatTime(stage.getTime()));
                     }
-                }, Util.getHrs(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
+                }, Util.getHrsNoDays(t), Util.getMinsWithHrs(t), Util.getSecsWithMins(t), true);
                 mTimePicker.show();
             }
         });

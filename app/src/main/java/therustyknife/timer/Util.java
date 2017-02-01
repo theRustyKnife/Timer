@@ -54,7 +54,7 @@ public class Util {
     }
     public static final String formatTime(long milis){ return formatTime((int)(milis / MILLIS_IN_SECOND)); }
 
-    public static int getHrs(int t){ return t / (60 * 60); }
+    public static int getHrsNoDays(int t){ return t / (60 * 60); }
     public static int getMinsWithHrs(int t){ return (t / 60) % 60; }
     public static int getSecsWithMins(int t){ return t % 60; }
 

@@ -22,6 +22,7 @@ public class CalendarContainerFragment extends Fragment{
     // the currently displayed fragment
     private CalendarFragment contentFragment;
 
+    private ImageButton expandButton;
 
     public static CalendarContainerFragment newInstance(){ return new CalendarContainerFragment(); }
 
@@ -35,7 +36,7 @@ public class CalendarContainerFragment extends Fragment{
         setContentFragment();
 
         // get a reference to the arrow button
-        final ImageButton expandButton = (ImageButton) view.findViewById(R.id.calendar_expand_button);
+        expandButton = (ImageButton) view.findViewById(R.id.calendar_expand_button);
 
         final View.OnClickListener expandClick = new View.OnClickListener() {
             @Override
@@ -100,5 +101,17 @@ public class CalendarContainerFragment extends Fragment{
                 swapContentFragment(QuickCalendarFragment.newInstance());
             }
         }
+    }
+
+    // handle the back click from the parent activity
+    // return true if handled, false if the parent should handle it
+    public boolean onBackPressed(){
+        if (contentFragment != null && !(contentFragment instanceof QuickCalendarFragment)){
+            swapContentFragment(QuickCalendarFragment.newInstance());
+            expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
+            return true;
+        }
+
+        return false;
     }
 }
