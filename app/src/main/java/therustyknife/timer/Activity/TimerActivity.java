@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,13 @@ import therustyknife.timer.Util;
 // the activity that serves the actual purpose of the app
 // contains the countdown, other status displays, some options for editing the timer
 public class TimerActivity extends AppCompatActivity{
+    // the sizes for the auto resize status TextView
+    private float MIN_STATUS_SIZE;
+    private float MAX_STATUS_SIZE;
+
+
+    private boolean running = true;
+
     private Timer timer; // the timer associated with this activity
     private TimerState state; // convenience for accessing the stats
 
@@ -55,6 +63,16 @@ public class TimerActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // get the status size hack definitions
+        TypedValue outValue = new TypedValue();
+        getResources().getValue(R.dimen.status_size_min, outValue, true);
+        MIN_STATUS_SIZE = getResources().getDisplayMetrics().ydpi * outValue.getFloat();
+
+        getResources().getValue(R.dimen.status_size_max, outValue, true);
+        MAX_STATUS_SIZE = getResources().getDisplayMetrics().ydpi * outValue.getFloat();
+
+        Log.d(Util.TAG, "dpi: " + getResources().getDisplayMetrics().ydpi + "; MIN_STATUS_SIZE: " + MIN_STATUS_SIZE + "; MAX_STATUS_SIZE: " + MAX_STATUS_SIZE);
 
         // set up the toolbar, save it for changing color in the future
         setContentView(R.layout.activity_timer);
@@ -104,16 +122,24 @@ public class TimerActivity extends AppCompatActivity{
             setContentFragment();
         }
 
+        statusDisplay.post(new Runnable() {
+            @Override
+            public void run() {
+                // make sure the correct size is set for the status display
+                Util.resizeText(statusDisplay, MAX_STATUS_SIZE, MIN_STATUS_SIZE);
+            }
+        });
+
         updateDisplay();
 
         // start the update loop
         final Handler h = new Handler();
-        final int delay = 100; //milliseconds
+        final int delay = 25; //milliseconds
 
         h.postDelayed(new Runnable(){
             public void run(){
                 update();
-                h.postDelayed(this, delay);
+                if (running) h.postDelayed(this, delay);
             }
         }, delay);
     }
@@ -216,13 +242,19 @@ public class TimerActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        running = false;
+    }
+
+    @Override
     protected void onResume(){
         super.onResume();
 
         // update the content when returning from stage edit
-        if (timer.getStageCount() == 0) // if there are no stages remove the content
+        if (timer.getStageCount() == 0) { // if there are no stages remove the content
             if (contentFragment != null) removeContentFragment();
-        else if (state.isStopped()){ // otherwise make sure there's the stopped fragment (and only that) if the timer is stopped
+        }else if (state.isStopped()){ // otherwise make sure there's the stopped fragment (and only that) if the timer is stopped
             removeContentFragment();
             contentFragment = TimerStoppedFragment.newInstance(this, state);
             setContentFragment();
@@ -274,9 +306,19 @@ public class TimerActivity extends AppCompatActivity{
     }
 
     // update all the views from the current state of the timer
+    private String updatePrevText = "";
     private void updateDisplay(){
         if (state == null) return; // make sure there's data to update from
-        statusDisplay.setText(state.getStatus());
+
+        // set the status text, if it changed
+        String text = state.getStatus();
+        if (!text.equals(updatePrevText)) {
+            statusDisplay.setText(text);
+            updatePrevText = text;
+
+            // try to fit the text as well as possible
+            Util.resizeText(statusDisplay, MAX_STATUS_SIZE, MIN_STATUS_SIZE);
+        }
 
         // update the next stage display based on the next stage of the timer // make it invisible when there's no next stage
         TimerStage nextStage = state.getNext();

@@ -33,32 +33,30 @@ public class CalendarDaySmallFragment extends Fragment {
     // the onClick listener
     private OnDayClickListener onClickListener;
 
-    // again, a hack around the fact that we can't pass in arguments to the constructor
-    private static int argDayOffset;
     // determines the day that will be shown, 0 being today and negative the days that had passed
     // positive numbers will cause the time sum to show "--"
     private int dayOffset;
 
     // the height that'll be used for this fragment
-    private static int argHeight;
     private int height;
 
+    private View dayTitle;
+    private View timeDisplay;
 
-    public CalendarDaySmallFragment(){
-        // set up the fields
-        this.dayOffset = argDayOffset;
-        argDayOffset = 0;
-        this.height = argHeight;
-        argHeight = 0;
-    }
+    private boolean setVisibleOnCreate;
 
-    public static CalendarDaySmallFragment newInstance(int dayOffset, int height) {
+    public static CalendarDaySmallFragment newInstance(int dayOffset, int height, boolean textVisible) {
         // hack-pass the day offset and height to the constructor, ugh
-        argDayOffset = dayOffset;
-        argHeight = height;
+        CalendarDaySmallFragment res = new CalendarDaySmallFragment();
 
-        return new CalendarDaySmallFragment();
+        res.setDayOffset(dayOffset);
+        res.setHeight(height);
+
+        res.setVisibleOnCreate = textVisible;
+
+        return res;
     }
+    public static CalendarDaySmallFragment newInstance(int dayOffset, int height){ return newInstance(dayOffset, height, true); }
     public static CalendarDaySmallFragment newInstance(int dayOffset){ return newInstance(dayOffset, (int)Util.context.getResources().getDimension(R.dimen.day_small_default_height)); }
     public static CalendarDaySmallFragment newInstance(){ return newInstance(0); } // default day to today
 
@@ -79,6 +77,10 @@ public class CalendarDaySmallFragment extends Fragment {
         View timeline = view.findViewById(R.id.timeline);
         View bg = view.findViewById(R.id.timeline_bg);
 
+        // get references to the TextViews
+        dayTitle = view.findViewById(R.id.day_small_name);
+        timeDisplay = view.findViewById(R.id.day_small_time);
+
         // set the height of the container and background - this will resize the entire view
         ViewGroup.LayoutParams paramsTL = timeline.getLayoutParams();
         ViewGroup.LayoutParams paramsBG = bg.getLayoutParams();
@@ -88,10 +90,10 @@ public class CalendarDaySmallFragment extends Fragment {
         bg.setLayoutParams(paramsBG);
 
         // set the text into the day name
-        ((TextView) view.findViewById(R.id.day_small_name)).setText(getResources().getStringArray(R.array.day_names)[DateTime.now().dayOfWeek().get() + dayOffset - 1]);
+        ((TextView) dayTitle).setText(getResources().getStringArray(R.array.day_names)[DateTime.now().dayOfWeek().get() + dayOffset - 1]);
 
         // set the time value into the other TextView
-        TextView tv = (TextView) view.findViewById(R.id.day_small_time);
+        TextView tv = (TextView) timeDisplay;
         if (dayOffset > 0) tv.setText("--"); // set the default if the day hasn't happened yet
         else {
             // sum up all the sessions that had happened that day
@@ -118,6 +120,9 @@ public class CalendarDaySmallFragment extends Fragment {
                 }
             }
         });
+
+        // make the TextViews invisible if desired
+        setDetailsVisible(setVisibleOnCreate);
 
         return view;
     }
@@ -173,6 +178,23 @@ public class CalendarDaySmallFragment extends Fragment {
 
 
     public void setOnDayClickListener(OnDayClickListener listener){ this.onClickListener = listener; }
+
+
+    private void setDayOffset(int dayOffset){ this.dayOffset = dayOffset; }
+
+    private void setHeight(int height){ this.height = height; }
+
+
+    // make the text / invisible
+    public void setDetailsVisible(boolean visible){
+        if (!visible){
+            timeDisplay.setVisibility(View.GONE);
+            dayTitle.setVisibility(View.GONE);
+        }else{
+            timeDisplay.setVisibility(View.VISIBLE);
+            dayTitle.setVisibility(View.VISIBLE);
+        }
+    }
 
 
     public interface OnDayClickListener{

@@ -51,7 +51,7 @@ public class TimerStats implements Serializable {
         current.pauses += pauseTime;
     }
 
-    public void skip(){ current.skipped = true; }
+    public void skip(){ if (current != null) current.skipped = true; }
 
     public void finish(){
         if (current != null) {

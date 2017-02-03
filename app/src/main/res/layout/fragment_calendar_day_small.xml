@@ -14,28 +14,39 @@
         android:id="@+id/day_small_name"/>
 
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center">
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="@dimen/day_small_default_height"
-            android:background="@drawable/rect"
-            android:layout_gravity="center"
-            android:id="@+id/timeline_bg"/>
+        android:layout_marginBottom="10dp">
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_height="@dimen/day_small_default_height"
-            android:id="@+id/timeline">
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:id="@+id/timestamp_layout"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="@dimen/day_small_default_height"
+                android:background="@drawable/rect"
+                android:layout_gravity="center"
+                android:id="@+id/timeline_bg"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_height="@dimen/day_small_default_height"
+                android:id="@+id/timeline"/>
         </FrameLayout>
-    </FrameLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

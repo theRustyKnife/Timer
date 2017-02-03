@@ -2,16 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="therustyknife.timer.Fragments.TimerStoppedFragment"
     android:orientation="vertical"
     android:id="@+id/running_layout"
     android:gravity="center"
     android:keepScreenOn="true">>
 
-    <TextView
+    <com.github.lzyzsd.circleprogress.DonutProgress
+        android:layout_width="@dimen/running_time_size"
+        android:layout_height="@dimen/running_time_size"
+        app:donut_text="hi!"
+        app:donut_text_size="@dimen/running_time_text_size"
+        app:donut_text_color="@color/colorTextPrimary"
+        app:donut_finished_color="@color/colorAccent"
+        android:id="@+id/time_remaining"
+        app:donut_max="1000000"
+        app:donut_unfinished_stroke_width="4dp"/>
+
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/time_remaining"
-        android:textSize="80sp"/>
+        android:textSize="80sp"/>-->
 
 </LinearLayout>

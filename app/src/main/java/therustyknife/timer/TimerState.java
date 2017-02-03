@@ -195,6 +195,11 @@ public class TimerState {
         return Util.formatTime(currentSession.getRemaining());
     }
 
+    public float getCurrentFinishedProgress(){
+        if (currentSession != null) return (float)(currentSession.getRemaining()) / (float)(currentSession.duration);
+        return 0;
+    }
+
 
     // this class represents one chunk of time in the timer
     // each stage has two of such "chunks": pause and the stage itself

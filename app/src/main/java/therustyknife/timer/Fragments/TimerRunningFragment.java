@@ -2,22 +2,26 @@ package therustyknife.timer.Fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.DonutProgress;
+
 import therustyknife.timer.Activity.TimerActivity;
 import therustyknife.timer.R;
 import therustyknife.timer.TimerState;
+import therustyknife.timer.Util;
 
 
 // the fragment that's shown when the timer is running
 // contains just the time countdown
 public class TimerRunningFragment extends TimerFragment {
     // the TextView for the countdown
-    private TextView time;
+    private DonutProgress time;
 
 
     // make a new instance of this fragment with the state and activity that got passed in
@@ -32,7 +36,7 @@ public class TimerRunningFragment extends TimerFragment {
         View view = inflater.inflate(R.layout.fragment_timer_running, container, false);
 
         // get the reference to the countdown view
-        time = (TextView) view.findViewById(R.id.time_remaining);
+        time = (DonutProgress) view.findViewById(R.id.time_remaining);
 
         // make clicking anywhere pause the timer
         view.findViewById(R.id.running_layout).setOnClickListener(new View.OnClickListener() {
@@ -47,6 +51,9 @@ public class TimerRunningFragment extends TimerFragment {
 
     @Override
     public void update(){
-        if (state != null && time != null) time.setText(state.getRemainingTime());
+        if (state != null && time != null){
+            time.setText(state.getRemainingTime());
+            time.setDonut_progress((int)(state.getCurrentFinishedProgress() * 1000000) + "");
+        }
     }
 }

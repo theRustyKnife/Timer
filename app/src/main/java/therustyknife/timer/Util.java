@@ -4,6 +4,7 @@ package therustyknife.timer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.os.Environment;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
@@ -52,7 +53,7 @@ public class Util {
 
         return String.format(TIME_FORMATS[timeFormatIndex], minutes, seconds);
     }
-    public static final String formatTime(long milis){ return formatTime((int)(milis / MILLIS_IN_SECOND)); }
+    public static final String formatTime(long millis){ return formatTime((int)(millis / MILLIS_IN_SECOND)); }
 
     public static int getHrsNoDays(int t){ return t / (60 * 60); }
     public static int getMinsWithHrs(int t){ return (t / 60) % 60; }
@@ -178,6 +179,18 @@ public class Util {
     public static void deleteFile(String path){
         File file = new File(path);
         if (file.exists()) file.delete();
+    }
+
+    public static void resizeText(TextView textView, float originalTextSize, float minTextSize) {
+        final Paint paint = textView.getPaint();
+        final int width = textView.getWidth();
+        if (width == 0) return;
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, originalTextSize);
+        float ratio = width / paint.measureText(textView.getText().toString());
+        if (ratio <= 1.0f) {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.max(minTextSize, originalTextSize * ratio));
+        }
     }
 
 
