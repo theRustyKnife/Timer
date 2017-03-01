@@ -1,7 +1,10 @@
 package therustyknife.timer;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Path;
 import android.media.MediaScannerConnection;
@@ -28,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+
+import therustyknife.timer.Activity.MainActivity;
 
 
 // the main timer class
@@ -72,6 +77,56 @@ public class Timer implements Serializable{
 
     // serialize the global timer list
     public static void saveList(){ for (Timer t : list) t.save(); }
+
+    // save the serialized timers to external storage for backup and migration
+    public static void saveListExternal(){ for (Timer t : list) t.saveExternal(); }
+
+    // attempts to load all the timers from external save location
+    public static void loadListExternal(MainActivity a){
+        final MainActivity ta = a;
+        Util.showConfirmBox(a, "This will delete all the current timers, continue?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteList();
+
+                File dir = null;
+                try {
+                    dir = new File(Environment.getExternalStorageDirectory(), "/Timer/" + Util.context.getPackageManager().getPackageInfo(Util.context.getPackageName(), 0).versionName + "/");
+                } catch (PackageManager.NameNotFoundException e){ e.printStackTrace(); }
+                // make sure the directory exists
+                if (!dir.exists() || dir.isFile()) dir.mkdirs();
+
+                // get the file list from the directory, return if none are found
+                String[] files = dir.list();
+                if (files == null) {
+                    Log.d(Util.TAG, "No data found in " + dir);
+                    ta.notifyDataChanged();
+                    return;
+                }
+
+                // iterate over the files and load timers from them
+                for (String fname : files){
+                    File file = new File(dir + "/" + fname);
+                    Log.d(Util.TAG, "Found " + fname);
+                    if (file.isFile()){
+                        Log.d(Util.TAG, "Loading a timer from: " + file);
+                        Timer tTimer = loadExternal(file.getPath());
+                        if (tTimer == null) Log.e(Util.TAG, "Loading failed");
+                        else list.add(tTimer);
+                    }
+                }
+
+                saveList();
+
+                Log.d(Util.TAG, "Loaded " + list.size() + " timers from " + dir);
+
+                ta.notifyDataChanged();
+            }
+        });
+    }
+
+    // delete all timers currently
+    public static void deleteList(){ while (list.size() > 0) list.get(0).delete(); }
 
     // load the global timer list from the serialized state
     public static void loadList(){
@@ -136,12 +191,56 @@ public class Timer implements Serializable{
         }catch (IOException e){}
     }
 
+    //attempt to serialize this timer to external storage
+    public void saveExternal() {
+        if (Util.canWriteOnExternalStorage()) {
+            File file = null;
+            try {
+                file = new File(Environment.getExternalStorageDirectory(), "/Timer/" + Util.context.getPackageManager().getPackageInfo(Util.context.getPackageName(), 0).versionName + "/" + name);
+            } catch (PackageManager.NameNotFoundException e){ e.printStackTrace(); }
+
+            Log.d(Util.TAG, "Export path: " + file);
+
+            try {
+                if (!file.exists()){
+                    if (!file.getParentFile().mkdirs()) Log.d(Util.TAG, "Failed to create parent dir...");
+                    Log.d(Util.TAG, "New path: " + file + "; parent: " + file.getParentFile());
+                    if (file.getParentFile().exists()) Log.d(Util.TAG, "parent exists: " + file.getParentFile());
+                    else Log.d(Util.TAG, "parent does not exist...");
+                    file.createNewFile();
+                }
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream os = new ObjectOutputStream(bos);
+                os.writeObject(this);
+                os.flush();
+                Util.writeData(file.getPath(), bos.toByteArray());
+                bos.close();
+            } catch (IOException e){ Log.e(Util.TAG, e.getMessage()); /*e.printStackTrace(); */}
+        }else Log.d(Util.TAG, "Failed save - can't write on external storage.");
+    }
+
     // load a timer from the specified path
     public static Timer load(String path){
         File file = new File(Util.makePath(Util.TIMER_SAVE_PATH + path));
         try {
             // load to a byte array and then deserialize (again, I have no clue why I did it this way)
             ByteArrayInputStream bis = new ByteArrayInputStream(Util.readData(file.getPath()));
+            ObjectInputStream is = new ObjectInputStream(bis);
+            Timer res = (Timer) is.readObject();
+            is.close();
+            bis.close();
+
+            res.initState();
+
+            return res;
+        }catch(IOException | ClassNotFoundException e){ return null; } // return null on failure
+    }
+
+    public static Timer loadExternal(String path){
+        try {
+            // load to a byte array and then deserialize (again, I have no clue why I did it this way)
+            ByteArrayInputStream bis = new ByteArrayInputStream(Util.readData(path));
             ObjectInputStream is = new ObjectInputStream(bis);
             Timer res = (Timer) is.readObject();
             is.close();

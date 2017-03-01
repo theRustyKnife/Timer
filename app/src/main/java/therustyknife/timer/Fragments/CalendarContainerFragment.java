@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,6 +26,14 @@ public class CalendarContainerFragment extends Fragment{
     private ImageButton expandButton;
 
     public static CalendarContainerFragment newInstance(){ return new CalendarContainerFragment(); }
+
+    private CalendarBigFragment.OnDetailsRequestedListener onDetailsRequestedListener = new CalendarBigFragment.OnDetailsRequestedListener() {
+        @Override
+        public void onDetailsRequested(int dayOffset) {
+            // display the day detail
+            swapContentFragment(CalendarDayDetailFragment.newInstance(dayOffset));
+        }
+    };
 
 
     @Override
@@ -47,13 +56,7 @@ public class CalendarContainerFragment extends Fragment{
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_36dp));
 
                         // set the big calendar fragment and listen for day clicks
-                        swapContentFragment(CalendarBigFragment.newInstance(new CalendarBigFragment.OnDetailsRequestedListener() {
-                            @Override
-                            public void onDetailsRequested(int dayOffset) {
-                                // display the day detail
-                                swapContentFragment(CalendarDayDetailFragment.newInstance(dayOffset));
-                            }
-                        }));
+                        swapContentFragment(CalendarBigFragment.newInstance(onDetailsRequestedListener));
                     }
                     else{
                         expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
@@ -106,9 +109,18 @@ public class CalendarContainerFragment extends Fragment{
     // handle the back click from the parent activity
     // return true if handled, false if the parent should handle it
     public boolean onBackPressed(){
-        if (contentFragment != null && !(contentFragment instanceof QuickCalendarFragment)){
+        if (contentFragment == null) return false;
+
+        // close the big calendar view
+        if (contentFragment instanceof CalendarBigFragment){
             swapContentFragment(QuickCalendarFragment.newInstance());
             expandButton.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_36dp));
+            return true;
+        }
+
+        // return to the big calendar view
+        if (contentFragment instanceof CalendarDayDetailFragment){
+            swapContentFragment(CalendarBigFragment.newInstance(onDetailsRequestedListener));
             return true;
         }
 

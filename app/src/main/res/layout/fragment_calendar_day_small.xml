@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:id="@+id/timestamp_layout"/>
+            android:id="@+id/time_dimen_layout"/>
 
         <FrameLayout
             android:layout_width="wrap_content"

@@ -32,6 +32,11 @@ public final class TimeUtil {
         return (float)(time / (24*60*60*1000.0));
     }
 
+    public static String getTimeAtPercent(float percent){
+        int time = (int)(percent * (24*60*60));
+        return String.format("%1$02d:%2$02d", Util.getHrsNoDays(time), Util.getMinsWithHrs(time));
+    }
+
     public static float getDayPercent(long time) {
         return (float)(time / (24*60*60*1000.0));
     }

@@ -9,7 +9,6 @@
     <dimen name="day_detail_timeline_height">4000dp</dimen>
     <dimen name="bar_width">10dp</dimen>
 
-    <!--TODO: figure out the sizes here-->
     <item name="status_size_max" format="float" type="dimen">0.35</item>
     <item name="status_size_min" format="float" type="dimen">0.15</item>
     <dimen name="status_size_default">22sp</dimen>

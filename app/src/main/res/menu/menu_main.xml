@@ -7,4 +7,16 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export"
+        android:orderInCategory="120"
+        android:title="Export"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_import"
+        android:orderInCategory="121"
+        android:title="Import"
+        app:showAsAction="never"/>
 </menu>

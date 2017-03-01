@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,17 @@ import therustyknife.timer.Util;
 
 
 // the fragment that shows the days with timelines
-public class CalendarDaySmallFragment extends Fragment {
-    // the onClick listener
+public class CalendarDaySmallFragment extends Fragment {// the onClick listener
+    private static final int DIMEN_BASE_NUMBER = 3;
+    private static final int DIMEN_SCALE_STEP = 2;
+    private static final float DIMEN_DEFAULT_MIN_DISTANCE = 100;
+
+    private static final float DIMEN_DEFAULT_MARGIN = 5;
+
+
     private OnDayClickListener onClickListener;
+
+    private OnViewCreatedListener onViewCreatedListener;
 
     // determines the day that will be shown, 0 being today and negative the days that had passed
     // positive numbers will cause the time sum to show "--"
@@ -43,26 +52,42 @@ public class CalendarDaySmallFragment extends Fragment {
     private View dayTitle;
     private View timeDisplay;
 
-    private boolean setVisibleOnCreate;
+    private ViewGroup timeDimenLayout;
 
-    public static CalendarDaySmallFragment newInstance(int dayOffset, int height, boolean textVisible) {
+    private boolean setVisibleOnCreate;
+    private boolean showTimeDimens;
+
+    private int firstY;
+
+    private int dimenNumber = DIMEN_BASE_NUMBER;
+    private float minDimenDistance;
+
+    private float dimenMargin;
+
+
+    public static CalendarDaySmallFragment newInstance(int dayOffset, int height, boolean textVisible, boolean timeDimens) {
         // hack-pass the day offset and height to the constructor, ugh
         CalendarDaySmallFragment res = new CalendarDaySmallFragment();
 
-        res.setDayOffset(dayOffset);
-        res.setHeight(height);
+        res.dayOffset = dayOffset;
+        res.height = height;
 
         res.setVisibleOnCreate = textVisible;
 
+        res.showTimeDimens = timeDimens;
+
         return res;
     }
-    public static CalendarDaySmallFragment newInstance(int dayOffset, int height){ return newInstance(dayOffset, height, true); }
+    public static CalendarDaySmallFragment newInstance(int dayOffset, int height){ return newInstance(dayOffset, height, true, false); }
     public static CalendarDaySmallFragment newInstance(int dayOffset){ return newInstance(dayOffset, (int)Util.context.getResources().getDimension(R.dimen.day_small_default_height)); }
     public static CalendarDaySmallFragment newInstance(){ return newInstance(0); } // default day to today
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        minDimenDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DIMEN_DEFAULT_MIN_DISTANCE, getResources().getDisplayMetrics());
+        dimenMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DIMEN_DEFAULT_MARGIN, getResources().getDisplayMetrics());
+
         View view = inflater.inflate(R.layout.fragment_calendar_day_small, container, false);
 
         // pass the click events
@@ -80,6 +105,8 @@ public class CalendarDaySmallFragment extends Fragment {
         // get references to the TextViews
         dayTitle = view.findViewById(R.id.day_small_name);
         timeDisplay = view.findViewById(R.id.day_small_time);
+
+        timeDimenLayout = (ViewGroup) view.findViewById(R.id.time_dimen_layout);
 
         // set the height of the container and background - this will resize the entire view
         ViewGroup.LayoutParams paramsTL = timeline.getLayoutParams();
@@ -110,6 +137,7 @@ public class CalendarDaySmallFragment extends Fragment {
             @Override
             public void onGlobalLayout() {
                 drawBars();
+                if (showTimeDimens) drawTimeDimens();
 
                 // remove the listener once the bars have been drawn
                 ViewTreeObserver obs = getView().getViewTreeObserver();
@@ -141,6 +169,8 @@ public class CalendarDaySmallFragment extends Fragment {
         // set the minimum height of our bars to the same as their width to make them circular in their smallest state
         float minHeight = getResources().getDimension(R.dimen.bar_width);
 
+        firstY = view.getHeight();
+
         // draw the bars
         for (TimerStats.Session s : sessions){
             // inflate the bar view and add it to the container view
@@ -167,6 +197,8 @@ public class CalendarDaySmallFragment extends Fragment {
             float y = view.getHeight() * TimeUtil.getDayProgressPercent(s.getStartedAt());
             if (y > (view.getHeight() - height)) y = view.getHeight() - height;
 
+            if (y < firstY) firstY = (int)y;
+
             // set the position of the bar
             barView.setY(y);
         }
@@ -174,15 +206,33 @@ public class CalendarDaySmallFragment extends Fragment {
         // reset the timeline background to prevent that weird "setColor() affecting Views that it shouldn't" bug
         GradientDrawable bg = (GradientDrawable) getView().findViewById(R.id.timeline_bg).getBackground();
         bg.setColor(getResources().getColor(R.color.time_line));
+
+        if (onViewCreatedListener != null) onViewCreatedListener.onViewCreated();
+    }
+
+    private void drawTimeDimens(){
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) timeDimenLayout.getLayoutParams();
+        params.rightMargin = (int) dimenMargin;
+
+        dimenNumber = DIMEN_BASE_NUMBER;
+
+        float height = getView().findViewById(R.id.timeline).getHeight();
+        while (height / (dimenNumber + 1) > minDimenDistance) dimenNumber *= DIMEN_SCALE_STEP;
+
+        float dimenDistance =  height / dimenNumber;
+
+        for (int i = 0; i < dimenNumber; i++){
+            TextView tv = new TextView(getActivity());
+            tv.setText(TimeUtil.getTimeAtPercent((float)i / (float)dimenNumber));
+            timeDimenLayout.addView(tv);
+            tv.setY(dimenDistance * i);
+        }
     }
 
 
     public void setOnDayClickListener(OnDayClickListener listener){ this.onClickListener = listener; }
 
-
-    private void setDayOffset(int dayOffset){ this.dayOffset = dayOffset; }
-
-    private void setHeight(int height){ this.height = height; }
+    public void setOnViewCreatedListener(OnViewCreatedListener listener){ this.onViewCreatedListener = listener; }
 
 
     // make the text / invisible
@@ -196,8 +246,15 @@ public class CalendarDaySmallFragment extends Fragment {
         }
     }
 
+    public int getFirstY(){ return firstY; }
+
 
     public interface OnDayClickListener{
         void onClick(int dayOffset);
+    }
+
+
+    public interface OnViewCreatedListener{
+        void onViewCreated();
     }
 }

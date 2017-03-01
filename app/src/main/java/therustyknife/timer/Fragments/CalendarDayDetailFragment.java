@@ -2,8 +2,11 @@ package therustyknife.timer.Fragments;
 
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,7 +26,7 @@ public class CalendarDayDetailFragment extends CalendarFragment {
     public static CalendarDayDetailFragment newInstance(int dayOffset) {
         CalendarDayDetailFragment res = new CalendarDayDetailFragment();
 
-        res.setDayOffset(dayOffset);
+        res.dayOffset = dayOffset;
 
         return res;
     }
@@ -32,9 +35,16 @@ public class CalendarDayDetailFragment extends CalendarFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calendar_day_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_calendar_day_detail, container, false);
 
-        timeline = CalendarDaySmallFragment.newInstance(dayOffset, (int)getResources().getDimension(R.dimen.day_detail_timeline_height), false);
+        timeline = CalendarDaySmallFragment.newInstance(dayOffset, (int)getResources().getDimension(R.dimen.day_detail_timeline_height), false, true);
+        timeline.setOnViewCreatedListener(new CalendarDaySmallFragment.OnViewCreatedListener() {
+            @Override
+            public void onViewCreated() {
+                view.findViewById(R.id.scroll_view).scrollTo(0, timeline.getFirstY());
+            }
+        });
+
         getChildFragmentManager().beginTransaction().add(R.id.timeline_container, timeline).commit();
 
         //TODO: add names and times and stuff...
@@ -43,5 +53,5 @@ public class CalendarDayDetailFragment extends CalendarFragment {
     }
 
 
-    private void setDayOffset(int dayOffset){ this.dayOffset = dayOffset; }
+    public int getDayOffset(){ return dayOffset; }
 }
